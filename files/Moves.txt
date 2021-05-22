@@ -1,0 +1,5 @@
+LeftOne [MoveName]ed RightOne But RightOne Countered with [MoveName] and then [Moves]
+RightOne [MoveName]ed LeftOne But LeftOne Countered with [MoveName] and then [Moves]
+LeftOne Tried pinning after [MoveName] unsuccessfully and [Moves]
+RightOne Tried pinning after [MoveName] unsuccessfully and [Moves]
+[FinalPinned]

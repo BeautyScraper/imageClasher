@@ -1,0 +1,1 @@
+cmd /k python "D:\Developed\Automation\imageClasher\Aftermath.py" %cd%

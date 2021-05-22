@@ -1,0 +1,1 @@
+cmd /k python D:\Developed\Automation\imageClasher\ImageClash.py "D:\paradise\stuff\Essence\FS\SharedBuffer\No FS\1beautyExpress"

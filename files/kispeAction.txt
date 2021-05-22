@@ -1,0 +1,4 @@
+[stars] ka storyline/gimmick suit karega
+[DotaHero] ka storyline/gimmick suit karega
+[pureKapde] suit karenge
+[MoveName] suit karega

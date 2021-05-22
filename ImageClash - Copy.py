@@ -16,12 +16,25 @@ from random import shuffle
 import random
 import numpy as np
 import re
-import time
 import os
 from notSoRand import main
-import Aftermath
-from MyUtility import moveByFastCopy
 
+class FileAction():
+    
+    def __init__(self,ActionString,srcFile,*param):
+        self.ActionString = ActionString
+        self.srcFile = srcFile
+        
+    def movesrcLsttoDstPath(self,srcFileName,DstPath):
+        pass
+    def perform():
+        if not Path(self.srcFile).is_file():
+            return
+        if self.ActionString == 'move':
+            p = Path(param[0])
+            assert p.is_dir()
+            self.movesrcLsttoDstPath(self.srcFile,p)
+            
 def openInBrowser(fileName):
     import webbrowser
     template = 'https://www.instagram.com/p/@@/'
@@ -35,16 +48,7 @@ def openInBrowser(fileName):
     print(urlToOpen)
     webbrowser.open(urlToOpen, new=2)
     
-def csvReadFile(df,dffilename,listOfName):
-    if dffilename.is_file():
-        df1 = pd.read_csv(str(dffilename))
-        df1 = df1.set_index(df1.columns[0])
-        # import pdb;pdb.set_trace()
-        df = df1 + df
-        df = df[listOfName].filter(items=listOfName,axis=0)
-        df = df.fillna(0.)
-    return df
-
+    
 
 
 class ClickableLabel(QtWidgets.QLabel):
@@ -52,12 +56,7 @@ class ClickableLabel(QtWidgets.QLabel):
     CtrlClicked = QtCore.pyqtSignal()
     Rclicked = QtCore.pyqtSignal()
     CtrlRclicked = QtCore.pyqtSignal()
-    # rightOne = 1
-    def noteItDown(self, fileName):
-        with open('list' + str(fileName) + '.opml', 'a+') as fp:
-            fp.write(self.Imagelist[self.currentIndex] + '\n')
-    def setList(self,List,ra = 1):
-        self.rightOne = ra
+    def setList(self,List):
         self.Imagelist = List
         self.currentIndex = 0
         self.redhotmap = QtGui.QPixmap(self.Imagelist[0])
@@ -67,18 +66,16 @@ class ClickableLabel(QtWidgets.QLabel):
     def bringNextContenderOut(self):
         self.currentIndex += 1
         self.redhotmap = QtGui.QPixmap(self.Imagelist[self.currentIndex])
-        self.redhotmap = self.redhotmap.scaled(self.geometry().width(),self.geometry().height() * self.rightOne,1,1)
+        self.redhotmap = self.redhotmap.scaled(self.geometry().width(),self.geometry().height(),1,1)
         self.setPixmap(self.redhotmap)
         self.resize(self.redhotmap.width(),self.redhotmap.height())
-        self.setAlignment(QtCore.Qt.AlignTop)
         
     def bringPreviousContenderOut(self):
         self.currentIndex -= 1
         self.redhotmap = QtGui.QPixmap(self.Imagelist[self.currentIndex])
-        self.redhotmap = self.redhotmap.scaled(self.geometry().width(),self.geometry().height() * self.rightOne ,1,1)
+        self.redhotmap = self.redhotmap.scaled(self.geometry().width(),self.geometry().height(),1,1)
         self.setPixmap(self.redhotmap)
         self.resize(self.redhotmap.width(),self.redhotmap.height())
-        self.setAlignment(QtCore.Qt.AlignTop)
         # .setAlignment(QtCore.Qt.AlignLeft)
         # self.Text(self.Imagelist[self.currentIndex])
         # print('New Image Allocated',self.Imagelist[self.currentIndex],self.currentIndex)
@@ -116,22 +113,24 @@ class ClickableLabel(QtWidgets.QLabel):
 class Ui_MainWindow(object):
     path = sys.argv[1]
     def setupList(self):
-        
         self.listI = [str(x) for x in Path(self.path).glob('*.jpg')]
         listOfName =  [Path(x).stem for x in self.listI]
         shuffle(self.listI)
         self.dffilename = Path(self.path) / 'MatchRecord.csv'
-        self.tdffilename = Path(self.path) / 'MatchTimeRecord.csv'
         self.ActionList = []
         # self.ActionDict = [(filename, 'Move', DstDirPath)]
         weightM = np.zeros((len(listOfName),len(listOfName)))
         df = pd.DataFrame(weightM,columns=listOfName,index=listOfName)
-        tdf = pd.DataFrame(weightM,columns=listOfName,index=listOfName)
         # assert len(listOfName) != len(self.listI)
-        self.df = csvReadFile(df,self.dffilename,listOfName)
-        self.tdf = csvReadFile(tdf,self.tdffilename,listOfName)
-        self.listOfName = listOfName
-        
+        if self.dffilename.is_file():
+            df1 = pd.read_csv(str(self.dffilename))
+            df1 = df1.set_index(df1.columns[0])
+            # import pdb;pdb.set_trace()
+            df = df1 + df
+            df = df[listOfName].filter(items=listOfName,axis=0)
+            df = df.fillna(0.)
+        self.df = df
+
     def showTheWinner(self,MainWindow):
         print('current champion score is:' , self.df.sum(1).max())
         p = Path(self.path) / (self.df.sum(1).idxmax() + '.jpg')
@@ -139,11 +138,6 @@ class Ui_MainWindow(object):
         template = 'start "C:\Program Files\IrfanView\i_view64.exe\" /slideshow=%s' %  str(p)
         os.system(template)
         # print(p)
-        
-    def afterMath(self):
-        Aftermath.main(Path(self.path))
-    def openTargetDir(self):
-        os.system('start "" "%s"' % self.path)
         
     def showTheLoser(self,MainWindow):
         # print('current champion score is:' , self.df.sum(1).min())
@@ -157,23 +151,13 @@ class Ui_MainWindow(object):
         template = '\"C:\Program Files\IrfanView\i_view64.exe\" /slideshow=%s' %  str(myPicsListCatalog)
         print(template)
         os.system(template)
-        # print(p)     
-    def moveFiles(self,txtFile = 'listdnbh.txt.opml', moveToDit = 'dnbh'):
-        dels = Path(txtFile)
-        if dels.is_file():
-            dstPath = Path(self.path) / moveToDit
-            moveByFastCopy(txtFile,str(dstPath))
-            dels.unlink()
-    def closingActions(self,event):
-        self.df.to_csv(self.dffilename)
-        self.tdf.to_csv(self.tdffilename)
-        self.moveFiles()
+        # print(p)
         
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1920, 1000)
-        # MainWindow.closeEvent = lambda e: self.df.to_csv(self.dffilename) == self.tdf.to_csv(self.tdffilename)
-        MainWindow.closeEvent = self.closingActions
+        MainWindow.closeEvent = lambda e: self.df.to_csv(self.dffilename)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
@@ -200,16 +184,11 @@ class Ui_MainWindow(object):
         # redhotmap = QtGui.QPixmap("D:/paradise/stuff/Images/walls/juggernaut1_huc656199de66b421ef22ad489780ef428_234989_1920x1080_resize_q75_box.jpg")
         # redhotmap = redhotmap.scaled(200,200,0)
         # self.label.setPixmap(redhotmap)
-        fullScreenFlag = [False]
-        def toggleFulScreen():
-            MainWindow.setWindowState(QtCore.Qt.WindowFullScreen) if not fullScreenFlag[0] else MainWindow.setWindowState(QtCore.Qt.WindowMaximized)
-            fullScreenFlag[0] = not fullScreenFlag[0]
-        
         self.label.setScaledContents(False)
         self.horizontalLayout.addWidget(self.label)
         self.LeftImage = ClickableLabel(self.horizontalLayoutWidget)
         self.LeftImage.resize(w/2,h)
-        self.LeftImage.setList(self.listI[1::2],0.75)
+        self.LeftImage.setList(self.listI[1::2])
         self.LeftImage.setObjectName("LeftImage")
         # self.LeftImage.setGeometry(QtCore.QRect(0, 0, 400, 300))
         self.horizontalLayout.addWidget(self.LeftImage)
@@ -222,24 +201,14 @@ class Ui_MainWindow(object):
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.arraowEvent(0))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up), MainWindow, activated=lambda :MainWindow.setWindowState(QtCore.Qt.WindowMinimized) == MainWindow.close())
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Down), MainWindow, activated=lambda :self.showTheLoser(MainWindow))
-        
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_F), MainWindow, activated=lambda :openInBrowser(self.label.getCurrentcontenderName()))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_G), MainWindow, activated=lambda :openInBrowser(self.LeftImage.getCurrentcontenderName()))
-        
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_O), MainWindow, activated=self.openTargetDir)
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_A), MainWindow, activated=self.afterMath)
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_M), MainWindow, activated= toggleFulScreen)
-        
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.openFileIrfanView(self.label.getCurrentcontenderName()))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.openFileIrfanView(self.LeftImage.getCurrentcontenderName()))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.SHIFT + QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.label.bringPreviousContenderOut())
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.SHIFT + QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.LeftImage.bringPreviousContenderOut())
-        
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_1), MainWindow, activated=lambda :self.label.noteItDown('dnbh.txt'))
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_2), MainWindow, activated=lambda :self.LeftImage.noteItDown('dnbh.txt'))
-        
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.openFileIrfanView(self.LeftImage.getCurrentcontenderName()))
-        self.timestamp = time.time()
+
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), MainWindow, activated=self.label.bringNextContenderOut)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -302,23 +271,9 @@ class Ui_MainWindow(object):
             # import pdb;pdb.set_trace()
         self.df[loserName][winnerName] = 1
         self.df[winnerName][loserName] = -1
-        self.tdf[loserName][winnerName] = time.time() - self.timestamp
         # print('Change Start',Loser.currentIndex)
-        # listOfName =  [Path(x).stem for x in self.listI]
-        def canWinByTime(xIndex,yIndex):  
-            cond = lambda x,y: x - y if x > 0 and y > 0 else 0
-            # cond = lambda x,y: x > y 
-            gh = [cond(self.tdf.loc[xIndex,k], self.tdf.loc[yIndex,k]) for k in self.listOfName]
-            rt = sum(gh)
-            if rt > 0:
-                
-                print(yIndex, ' LLLLLLLLLLLLLLLL Defeated by time to WWWWWWWWWWWWWWWWWW', xIndex)
-                self.df[loserName][winnerName] = 1
-                self.df[winnerName][loserName] = -1   
-                # Loser.currentIndex += 1
-            # print('Returning ')
-            return rt
-        while self.df[loserName][winnerName] != 0 or self.df[winnerName][loserName] != 0 or canWinByTime(winnerName,loserName):
+        
+        while self.df[loserName][winnerName] != 0 and self.df[winnerName][loserName] != 0:
             if flag:
                 pass
                 # print( loserName,'Already Done')
@@ -329,14 +284,13 @@ class Ui_MainWindow(object):
             else:
                 # print('Last One')
                 return
-        
         # print('Change Over',Loser.currentIndex)
         Loser.currentIndex -= 1
         Loser.bringNextContenderOut()
         self.horizontalLayout.addStretch(1)
         # print('Change Over')
         # self.df.to_csv(self.dffilename)
-        self.timestamp = time.time()
+    
     # def getCurrentChampion(self):
         # pass
 

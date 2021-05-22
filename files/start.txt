@@ -1,0 +1,5 @@
+kiski [MyAction]
+kisko [kiskoaction]
+Kispe [kispeAction]
+kiska [kiskaAction]
+[Moves]
