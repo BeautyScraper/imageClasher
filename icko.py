@@ -230,7 +230,15 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.horizontalLayout.setAlignment(QtCore.Qt.AlignTop)
         self.label = ClickableLabel(self.horizontalLayoutWidget)
-
+        
+        self.textlabel = ClickableLabel(self.horizontalLayoutWidget)
+        self.textlabel.setObjectName("textlabel")
+        self.textlabel.setAlignment(QtCore.Qt.AlignLeft)
+        self.textlabel.setWordWrap(True)
+        self.textlabel.setFont(QtGui.QFont('Arial', 15))
+        self.textlabel.setText("Hello World")
+        
+        
         self.label.setText("")
         self.label.setObjectName("label")
         self.label.resize(w/2,h)
@@ -247,8 +255,11 @@ class Ui_MainWindow(object):
         self.LeftImage.resize(w/2,h)
         self.LeftImage.setList(self.listI[1::2],0.75)
         self.LeftImage.setObjectName("LeftImage")
-
-        self.horizontalLayout.addWidget(self.LeftImage)
+        
+        
+        
+        # self.horizontalLayout.addWidget(self.LeftImage)
+        # self.horizontalLayout.addWidget(self.textlabel)
         MainWindow.setCentralWidget(self.centralwidget)
         self.horizontalLayout.setAlignment(QtCore.Qt.AlignTop)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -302,12 +313,14 @@ class Ui_MainWindow(object):
             i += 1
         print(moveStr)
         self.statusbar.showMessage(moveStr)
+        self.textlabel.setText(moveStr)
         
     def AssignRole(self):
         
         moveStr = main()
         print(moveStr)
         self.statusbar.showMessage(moveStr)
+        self.textlabel.setText(moveStr)
     
     def statusbarManipulation(self):
         rng = 3 > random.randint(0,15)

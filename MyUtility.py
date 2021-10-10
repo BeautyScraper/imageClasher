@@ -20,12 +20,13 @@ def inputWithinTime(inputString='',timelimit=10):
         time.sleep(1)
         print(i+1)
         
-def moveByFastCopy(txtFileName,dstination):
+def moveByFastCopy(txtFileName,dstination,action='move'):
     fastCopyLocation = 'C:\\app\\FastCopyPortable\\FastCopyPortable.exe'
-    cmdTemplate = '''%0 /log /cmd="move" /auto_close /force_close /srcfile=%1 /to=%2 '''
+    cmdTemplate = '''%0 /log /cmd="%3" /auto_close /force_close /srcfile=%1 /to=%2 '''
     cmd = cmdTemplate.replace('%0',fastCopyLocation)
     cmd = cmd.replace('%1',txtFileName)
     cmd = cmd.replace('%2',dstination)
+    cmd = cmd.replace('%3',action)
     print(cmd)
     # import pdb;pdb.set_trace()
     os.system(cmd)
