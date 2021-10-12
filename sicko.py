@@ -31,7 +31,7 @@ parser.add_argument('--inputDir', type=dir_path)
 parser.add_argument('--cfgfile', type=dir_path,default='pickoactions.cfg')
 # parser.add_argument('--championsDir', type=dir_path)
 # parser.add_argument('--MidCardDir', type=dir_path)
-parser.add_argument('--DeletablePath', type=dir_path,default=r'C:\temp\deleatble')
+# parser.add_argument('--DeletablePath', type=dir_path,default=r'C:\temp\deleatble')
 # parser.add_argument('--time', type=int)
 # parser.add_argument('--winRate', type=int,default=20)
 parser.add_argument('--order', choices=['rand', 'date', 'name'],default='name')
@@ -256,11 +256,12 @@ class Ui_MainWindow(object):
             moveByFastCopy(txtFile,str(dstPath),moveAction)
             dels.unlink()
     def closingActions(self,event):
-        for tb in self.actions:
-            self.moveFiles(tb.notedownfile,tb.targetDir,False,'force_copy')
+        pass
+        # for tb in self.actions:
+            # self.moveFiles(tb.notedownfile,tb.targetDir,False,'force_copy')
         # breakpoint()
         
-        self.moveFiles(self.defaultaction.notedownfile,self.defaultaction.targetDir,False,'move')
+        # self.moveFiles(self.defaultaction.notedownfile,self.defaultaction.targetDir,False,'move')
         # self.moveFiles()
         # self.moveFiles('listchampions.txt.opml',args.championsDir,False)
         # self.moveFiles('listmidCard.txt.opml',r'C:\Heaven\YummyBaked\midCard',False)
@@ -331,7 +332,8 @@ class Ui_MainWindow(object):
         
         
         # self.label.actions = 
-        fullScreenFlag = [False]
+        
+        fullScreenFlag = [True]
         # self.horizontalLayout.addWidget(self.label)
         self.horizontalLayout.addWidget(self.textlabel)
         def toggleFulScreen():
@@ -352,8 +354,7 @@ class Ui_MainWindow(object):
                 QtWidgets.QShortcut(QtGui.QKeySequence(acts.keys), MainWindow, activated=lambda x=acts.notedownfile:self.label.noteItDown(x))
             if acts.actiontype == 'corr_move': 
                QtWidgets.QShortcut(QtGui.QKeySequence(acts.keys), MainWindow, activated=lambda x=acts.notedownfile:self.label.noteItDownre(x)) 
-            QtWidgets.QShortcut(QtGui.QKeySequence('Shift+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.openTargetDir(x))
-            QtWidgets.QShortcut(QtGui.QKeySequence('Alt+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.runIfVSlideshow(x))
+            QtWidgets.QShortcut(QtGui.QKeySequence('Alt+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.openTargetDir(x))
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.opendstdir())
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up), MainWindow, activated=lambda :MainWindow.setWindowState(QtCore.Qt.WindowMinimized) == MainWindow.close())
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Down), MainWindow, activated=lambda :self.showTheLoser(MainWindow))
@@ -366,8 +367,6 @@ class Ui_MainWindow(object):
         # breakpoint()
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_I), MainWindow, activated=lambda :self.openFileIrfanView(self.label.getCurrentcontenderName()))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_I), MainWindow, activated=lambda :self.openSrcFileIrfanview(self.label.getCurrentcontenderName()))
-
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_T), MainWindow, activated=self.startTime)
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.openFileIrfanView(self.LeftImage.getCurrentcontenderName()))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.SHIFT + QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.label.bringPreviousContenderOut())
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.SHIFT + QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.LeftImage.bringPreviousContenderOut())
@@ -380,22 +379,13 @@ class Ui_MainWindow(object):
         
 
         # self.timestamp = time.time()
-
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-    def startTime(self):
-        print('hello')
         rd = QTimer()
         rd.timeout.connect(self.arraowEvent)
         rd.start(1000)
-    def runIfVSlideshow(self,Filepath):
-        # if not Path(filePath).is_absolute():
-            # p = Path(self.path) / ( filePath + '.jpg')
-        MainWindow.setWindowState(QtCore.Qt.WindowMinimized)
-        MainWindow.close()
-        template = 'start "" "C:\Program Files (x86)\IrfanView\i_view32.exe" /slideshow="%s"' %  str(Filepath)
-        print(template)
-        os.system(template)
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        
+        
     def openFileIrfanView(self,filePath):
         if not Path(filePath).is_absolute():
             p = Path(self.path) / ( filePath + '.jpg')
@@ -485,7 +475,8 @@ class Ui_MainWindow(object):
            # Winner.setStyleSheet("border: 5px solid black;")
            # Winner.noteItDown('champions.txt') 
         # for _ in range(count):
-        self.label.noteItDown(self.defaultaction.notedownfile) 
+        # self.label.noteItDown(self.defaultaction.notedownfile) 
+        print('hello')
         self.label.bringNextContenderOut()
         self.statusbar.showMessage(self.label.getCurrentcontenderName())
         # Loser.bringNextContenderOut()
