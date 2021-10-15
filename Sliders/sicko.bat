@@ -1,0 +1,1 @@
+python "D:\Developed\Automation\imageClasher\sicko.py" --inputDir "D:\paradise\stuff\Images\Champions" --rand

@@ -3,7 +3,7 @@ import re
 import os
 from pathlib import Path
 
-def randomLine(fileName="test.txt"):
+def randomLine(fileName="test.txt",lineSelect=0):
     try:
         # print("opening " + fileName)
         with open("files\\" + fileName,"r") as inF:
@@ -11,8 +11,8 @@ def randomLine(fileName="test.txt"):
                 selectedLine = random.choice(inF.readlines())
             except:
                 selectedLine = 'Kuch Nahi'
-            if selectedLine == 'Kuch Nahi' or random.randint(1,100) <= 5:
-               os.system('start "" "files\%s"' % (fileName))
+            # if selectedLine == 'Kuch Nahi' or random.randint(1,100) <= 5:
+               # os.system('start "" "files\%s"' % (fileName))
             # print("Selected Lines is " + selectedLine)
             while(re.search("\[(.*?)\]",selectedLine)):
                 replaceMentStr = randomLine(re.search("\[(.*?)\]",selectedLine)[1] + ".txt")

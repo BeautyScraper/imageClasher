@@ -31,8 +31,8 @@ parser.add_argument('--inputDir', type=dir_path)
 parser.add_argument('--cfgfile', type=dir_path,default='pickoactions.cfg')
 # parser.add_argument('--championsDir', type=dir_path)
 # parser.add_argument('--MidCardDir', type=dir_path)
-# parser.add_argument('--DeletablePath', type=dir_path,default=r'C:\temp\deleatble')
-# parser.add_argument('--time', type=int)
+parser.add_argument('--DeletablePath', type=dir_path,default=r'C:\temp\deleatble')
+parser.add_argument('--slidetime', type=int,default=7000)
 # parser.add_argument('--winRate', type=int,default=20)
 parser.add_argument('--order', choices=['rand', 'date', 'name'],default='name')
 parser.add_argument('--rand', dest='rand', action='store_true')
@@ -108,6 +108,7 @@ class ClickableLabel(QtWidgets.QLabel):
     def setList(self,List,actions,ra = 1):
         self.actions = actions
         self.timers = []
+        self.setStyleSheet("background-color: black") 
         i = 0
         for act in actions:
             rd = QTimer()
@@ -256,12 +257,11 @@ class Ui_MainWindow(object):
             moveByFastCopy(txtFile,str(dstPath),moveAction)
             dels.unlink()
     def closingActions(self,event):
-        pass
-        # for tb in self.actions:
-            # self.moveFiles(tb.notedownfile,tb.targetDir,False,'force_copy')
+        for tb in self.actions:
+            self.moveFiles(tb.notedownfile,tb.targetDir,False,'force_copy')
         # breakpoint()
         
-        # self.moveFiles(self.defaultaction.notedownfile,self.defaultaction.targetDir,False,'move')
+        self.moveFiles(self.defaultaction.notedownfile,self.defaultaction.targetDir,False,'move')
         # self.moveFiles()
         # self.moveFiles('listchampions.txt.opml',args.championsDir,False)
         # self.moveFiles('listmidCard.txt.opml',r'C:\Heaven\YummyBaked\midCard',False)
@@ -270,7 +270,7 @@ class Ui_MainWindow(object):
         
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1920, 1000)
+        MainWindow.resize(1920, 1080)
         cfgfilename = args.cfgfile
         self.actions = []
         with open(cfgfilename,'r') as fp:
@@ -320,8 +320,9 @@ class Ui_MainWindow(object):
         # self.textlabel.setAlignment(QtCore.Qt.AlignLeft)
         self.textlabel.setAlignment(QtCore.Qt.AlignRight)
         self.textlabel.setWordWrap(True)
-        self.textlabel.setFont(QtGui.QFont('Arial', 15))
+        self.textlabel.setFont(QtGui.QFont('Arial', 30))
         self.textlabel.setText("Hello World")
+        self.textlabel.setStyleSheet("color: lightgreen") 
         
         # self.horizontalLayout.addWidget(self.textlabel)
         
@@ -332,19 +333,19 @@ class Ui_MainWindow(object):
         
         
         # self.label.actions = 
-        
         fullScreenFlag = [True]
         # self.horizontalLayout.addWidget(self.label)
         self.horizontalLayout.addWidget(self.textlabel)
         def toggleFulScreen():
             MainWindow.setWindowState(QtCore.Qt.WindowFullScreen) if not fullScreenFlag[0] else MainWindow.setWindowState(QtCore.Qt.WindowMaximized)
             fullScreenFlag[0] = not fullScreenFlag[0]
+            # self.label.resize(w,h)
 
         MainWindow.setCentralWidget(self.centralwidget)
         # self.horizontalLayout.setAlignment(QtCore.Qt.AlignTop)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        # MainWindow.setStatusBar(self.statusbar)
         
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.arraowEvent())
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.skipEvent(10))
@@ -354,7 +355,8 @@ class Ui_MainWindow(object):
                 QtWidgets.QShortcut(QtGui.QKeySequence(acts.keys), MainWindow, activated=lambda x=acts.notedownfile:self.label.noteItDown(x))
             if acts.actiontype == 'corr_move': 
                QtWidgets.QShortcut(QtGui.QKeySequence(acts.keys), MainWindow, activated=lambda x=acts.notedownfile:self.label.noteItDownre(x)) 
-            QtWidgets.QShortcut(QtGui.QKeySequence('Alt+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.openTargetDir(x))
+            QtWidgets.QShortcut(QtGui.QKeySequence('Shift+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.openTargetDir(x))
+            QtWidgets.QShortcut(QtGui.QKeySequence('Alt+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.runIfVSlideshow(x))
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.opendstdir())
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up), MainWindow, activated=lambda :MainWindow.setWindowState(QtCore.Qt.WindowMinimized) == MainWindow.close())
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Down), MainWindow, activated=lambda :self.showTheLoser(MainWindow))
@@ -367,6 +369,8 @@ class Ui_MainWindow(object):
         # breakpoint()
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_I), MainWindow, activated=lambda :self.openFileIrfanView(self.label.getCurrentcontenderName()))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_I), MainWindow, activated=lambda :self.openSrcFileIrfanview(self.label.getCurrentcontenderName()))
+
+        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_T), MainWindow, activated=self.startTime)
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.openFileIrfanView(self.LeftImage.getCurrentcontenderName()))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.SHIFT + QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.label.bringPreviousContenderOut())
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.SHIFT + QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.LeftImage.bringPreviousContenderOut())
@@ -376,16 +380,26 @@ class Ui_MainWindow(object):
         
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_1), MainWindow, activated=lambda :self.label.noteItDown('del.txt'))
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_2), MainWindow, activated=lambda :self.LeftImage.noteItDown('del.txt'))
-        
-
+        self.rd = QTimer()
+        self.rd.timeout.connect(self.SlideChanger)
+        self.rd.start(args.slidetime)
         # self.timestamp = time.time()
-        rd = QTimer()
-        rd.timeout.connect(self.arraowEvent)
-        rd.start(1000)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
-        
+    def startTime(self):
+        print('hello')
+        rd = QTimer()
+        rd.timeout.connect(self.arraowEvent)
+        rd.start(1000)
+    def runIfVSlideshow(self,Filepath):
+        # if not Path(filePath).is_absolute():
+            # p = Path(self.path) / ( filePath + '.jpg')
+        MainWindow.setWindowState(QtCore.Qt.WindowMinimized)
+        MainWindow.close()
+        template = 'start "" "C:\Program Files (x86)\IrfanView\i_view32.exe" /slideshow="%s"' %  str(Filepath)
+        print(template)
+        os.system(template)
     def openFileIrfanView(self,filePath):
         if not Path(filePath).is_absolute():
             p = Path(self.path) / ( filePath + '.jpg')
@@ -418,14 +432,11 @@ class Ui_MainWindow(object):
         
         moveStr = main()
         print(moveStr)
-        self.statusbar.showMessage(moveStr)
+        self.textlabel.setText(moveStr)
+        return moveStr
     
     def statusbarManipulation(self):
-        rng = 3 > random.randint(0,15)
-        if rng and False:
-           self.DoMoves()
-        else:
-            self.AssignRole()
+        return self.AssignRole()
     
     def opendstdir(self):
         deliberationTime = time.time() - self.timestamp
@@ -443,11 +454,19 @@ class Ui_MainWindow(object):
             self.label.currentIndex += i
             self.label.noteItDown(self.defaultaction.notedownfile) 
         self.arraowEvent()
-        
+    
+    def SlideChanger(self):
+        self.rd.stop()
+        stringlen = len(self.statusbarManipulation())
+        self.label.bringNextContenderOut()
+        self.statusbar.showMessage(self.label.getCurrentcontenderName())
+        self.label.resize(self.w, self.h)
+        self.rd.start(args.slidetime * int(stringlen/25))
+    
     def arraowEvent(self):
         
         
-        # self.statusbarManipulation()
+        
         # Winner = self.label
         # Loser = self.LeftImage
         # if WinningSide == 0:
@@ -475,10 +494,10 @@ class Ui_MainWindow(object):
            # Winner.setStyleSheet("border: 5px solid black;")
            # Winner.noteItDown('champions.txt') 
         # for _ in range(count):
-        # self.label.noteItDown(self.defaultaction.notedownfile) 
-        print('hello')
+        self.label.noteItDown(self.defaultaction.notedownfile) 
         self.label.bringNextContenderOut()
         self.statusbar.showMessage(self.label.getCurrentcontenderName())
+        self.label.resize(self.w, self.h)
         # Loser.bringNextContenderOut()
         # self.horizontalLayout.addStretch(1)
         # self.timestamp = time.time()

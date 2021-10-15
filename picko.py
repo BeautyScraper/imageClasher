@@ -269,7 +269,7 @@ class Ui_MainWindow(object):
         
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1920, 1000)
+        MainWindow.resize(1920, 1300)
         cfgfilename = args.cfgfile
         self.actions = []
         with open(cfgfilename,'r') as fp:
@@ -337,6 +337,7 @@ class Ui_MainWindow(object):
         def toggleFulScreen():
             MainWindow.setWindowState(QtCore.Qt.WindowFullScreen) if not fullScreenFlag[0] else MainWindow.setWindowState(QtCore.Qt.WindowMaximized)
             fullScreenFlag[0] = not fullScreenFlag[0]
+            # self.label.resize(w,h)
 
         MainWindow.setCentralWidget(self.centralwidget)
         # self.horizontalLayout.setAlignment(QtCore.Qt.AlignTop)
@@ -353,7 +354,7 @@ class Ui_MainWindow(object):
             if acts.actiontype == 'corr_move': 
                QtWidgets.QShortcut(QtGui.QKeySequence(acts.keys), MainWindow, activated=lambda x=acts.notedownfile:self.label.noteItDownre(x)) 
             QtWidgets.QShortcut(QtGui.QKeySequence('Shift+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.openTargetDir(x))
-            QtWidgets.QShortcut(QtGui.QKeySequence('Alt+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.runIfVSlideshow(x))
+            QtWidgets.QShortcut(QtGui.QKeySequence('Alt+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.runSicko(x))
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.opendstdir())
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up), MainWindow, activated=lambda :MainWindow.setWindowState(QtCore.Qt.WindowMinimized) == MainWindow.close())
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Down), MainWindow, activated=lambda :self.showTheLoser(MainWindow))
@@ -388,6 +389,16 @@ class Ui_MainWindow(object):
         rd = QTimer()
         rd.timeout.connect(self.arraowEvent)
         rd.start(1000)
+    def runSicko(self,Filepath):
+    
+        MainWindow.setWindowState(QtCore.Qt.WindowMinimized)
+        MainWindow.close()
+        pyfile =  Path(__file__).parent / 'sicko.py'
+        pyfile = str(pyfile)
+        template = 'Python "%s" --inputDir "%s" --cfgfile "%s" --rand' %  (pyfile,Filepath,args.cfgfile)
+        print(template)
+        os.system(template)
+        
     def runIfVSlideshow(self,Filepath):
         # if not Path(filePath).is_absolute():
             # p = Path(self.path) / ( filePath + '.jpg')
@@ -488,6 +499,7 @@ class Ui_MainWindow(object):
         self.label.noteItDown(self.defaultaction.notedownfile) 
         self.label.bringNextContenderOut()
         self.statusbar.showMessage(self.label.getCurrentcontenderName())
+        self.label.resize(self.w, self.h)
         # Loser.bringNextContenderOut()
         # self.horizontalLayout.addStretch(1)
         # self.timestamp = time.time()
