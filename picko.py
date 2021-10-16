@@ -319,6 +319,7 @@ class Ui_MainWindow(object):
         # self.textlabel.setAlignment(QtCore.Qt.AlignLeft)
         self.textlabel.setAlignment(QtCore.Qt.AlignRight)
         self.textlabel.setWordWrap(True)
+
         self.textlabel.setFont(QtGui.QFont('Arial', 8))
         with open(args.cfgfile,'r') as fp:
             # import pdb;pdb.set_trace()
@@ -339,8 +340,6 @@ class Ui_MainWindow(object):
         def toggleFulScreen():
             MainWindow.setWindowState(QtCore.Qt.WindowFullScreen) if not fullScreenFlag[0] else MainWindow.setWindowState(QtCore.Qt.WindowMaximized)
             fullScreenFlag[0] = not fullScreenFlag[0]
-            # self.label.resize(w,h)
-
         MainWindow.setCentralWidget(self.centralwidget)
         # self.horizontalLayout.setAlignment(QtCore.Qt.AlignTop)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -358,6 +357,7 @@ class Ui_MainWindow(object):
             QtWidgets.QShortcut(QtGui.QKeySequence('Shift+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.openTargetDir(x))
             QtWidgets.QShortcut(QtGui.QKeySequence('Alt+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.runSicko(x))
         QtWidgets.QShortcut(QtGui.QKeySequence('Alt+Left'), MainWindow, activated=lambda x=args.inputDir:self.runSicko(x))
+        # QtWidgets.QShortcut(QtGui.QKeySequence('Alt+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.runIfVSlideshow(x))
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.opendstdir())
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up), MainWindow, activated=lambda :MainWindow.setWindowState(QtCore.Qt.WindowMinimized) == MainWindow.close())
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Down), MainWindow, activated=lambda :self.showTheLoser(MainWindow))
@@ -402,6 +402,7 @@ class Ui_MainWindow(object):
         print(template)
         os.system(template)
         
+
     def runIfVSlideshow(self,Filepath):
         # if not Path(filePath).is_absolute():
             # p = Path(self.path) / ( filePath + '.jpg')
