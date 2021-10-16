@@ -429,13 +429,7 @@ class Ui_MainWindow(object):
     
     def statusbarManipulation(self):
         return self.AssignRole()
-    
-    def statusbarManipulation(self):
-        rng = 3 > random.randint(0,15)
-        if rng and False:
-           self.DoMoves()
-        else:
-            self.AssignRole()
+
     
     def opendstdir(self):
         deliberationTime = time.time() - self.timestamp
@@ -453,7 +447,6 @@ class Ui_MainWindow(object):
             self.label.currentIndex += i
             self.label.noteItDown(self.defaultaction.notedownfile) 
         self.arraowEvent()
-<<<<<<< HEAD
     
     def SlideChanger(self):
         self.rd.stop()
