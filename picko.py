@@ -356,7 +356,7 @@ class Ui_MainWindow(object):
                QtWidgets.QShortcut(QtGui.QKeySequence(acts.keys), MainWindow, activated=lambda x=acts.notedownfile:self.label.noteItDownre(x)) 
             QtWidgets.QShortcut(QtGui.QKeySequence('Shift+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.openTargetDir(x))
             QtWidgets.QShortcut(QtGui.QKeySequence('Alt+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.runSicko(x))
-        QtWidgets.QShortcut(QtGui.QKeySequence('Alt+Left'), MainWindow, activated=lambda x=args.inputDir:self.runSicko(x))
+        QtWidgets.QShortcut(QtGui.QKeySequence('Alt+Left'), MainWindow, activated=lambda x=args.inputDir:self.runSicko(x,args.order))
         # QtWidgets.QShortcut(QtGui.QKeySequence('Alt+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.runIfVSlideshow(x))
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.opendstdir())
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up), MainWindow, activated=lambda :MainWindow.setWindowState(QtCore.Qt.WindowMinimized) == MainWindow.close())
@@ -392,13 +392,13 @@ class Ui_MainWindow(object):
         rd = QTimer()
         rd.timeout.connect(self.arraowEvent)
         rd.start(1000)
-    def runSicko(self,Filepath):
+    def runSicko(self,Filepath,order='rand'):
     
         MainWindow.setWindowState(QtCore.Qt.WindowMinimized)
         MainWindow.close()
         pyfile =  Path(__file__).parent / 'sicko.py'
         pyfile = str(pyfile)
-        template = 'Python "%s" --inputDir "%s" --cfgfile "%s" --rand' %  (pyfile,Filepath,args.cfgfile)
+        template = 'Python "%s" --inputDir "%s" --cfgfile "%s" --order %s' %  (pyfile,Filepath,args.cfgfile,order)
         print(template)
         os.system(template)
         

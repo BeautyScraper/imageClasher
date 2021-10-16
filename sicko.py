@@ -206,7 +206,7 @@ class Ui_MainWindow(object):
     def setupList(self):
         
         self.listI = [str(x) for x in Path(self.path).glob('*.jpg')]
-        if args.rand:
+        if args.rand or args.order == 'rand':
             random.shuffle(self.listI)
         if args.order == 'date':
             print('sorting according to the date')
@@ -259,6 +259,7 @@ class Ui_MainWindow(object):
     def closingActions(self,event):
         for tb in self.actions:
             self.moveFiles(tb.notedownfile,tb.targetDir,False,'force_copy')
+        self.moveFiles(self.defaultaction.notedownfile,self.defaultaction.targetDir,False,'move')
         
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -324,6 +325,8 @@ class Ui_MainWindow(object):
         fullScreenFlag = [True]
         # self.horizontalLayout.addWidget(self.label)
         self.horizontalLayout.addWidget(self.textlabel)
+        
+        MainWindow.setWindowState(QtCore.Qt.WindowFullScreen) 
         def toggleFulScreen():
             MainWindow.setWindowState(QtCore.Qt.WindowFullScreen) if not fullScreenFlag[0] else MainWindow.setWindowState(QtCore.Qt.WindowMaximized)
             fullScreenFlag[0] = not fullScreenFlag[0]
@@ -351,6 +354,7 @@ class Ui_MainWindow(object):
         QtWidgets.QShortcut(QtGui.QKeySequence("Alt+Left"), MainWindow, activated=self.openTargetDir)
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_A), MainWindow, activated=self.afterMath)
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_M), MainWindow, activated= toggleFulScreen)
+        # toggleFulScreen()
         # QtGui.QKeySequence(QtCore.Qt.ALT + QtCore.Qt.Key_Left).toString()
         # breakpoint()
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_I), MainWindow, activated=lambda :self.openFileIrfanView(self.label.getCurrentcontenderName()))
@@ -486,10 +490,13 @@ class Ui_MainWindow(object):
            # Winner.setStyleSheet("border: 5px solid black;")
            # Winner.noteItDown('champions.txt') 
         # for _ in range(count):
+        self.rd.stop()
         self.label.noteItDown(self.defaultaction.notedownfile) 
         self.label.bringNextContenderOut()
+        stringlen = len(self.statusbarManipulation())
         self.statusbar.showMessage(self.label.getCurrentcontenderName())
         self.label.resize(self.w, self.h)
+        self.rd.start(args.slidetime * int(stringlen/25))
         # Loser.bringNextContenderOut()
         # self.horizontalLayout.addStretch(1)
         # self.timestamp = time.time()
