@@ -1,0 +1,1 @@
+python "D:\Developed\Automation\imageClasher\picko.py" --inputDir "C:\Heaven\YummyBaker" --order name  --cfgfile BakedYummy.cfg

@@ -269,7 +269,7 @@ class Ui_MainWindow(object):
         
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1920, 1300)
+        MainWindow.resize(1920, 1080)
         cfgfilename = args.cfgfile
         self.actions = []
         with open(cfgfilename,'r') as fp:
@@ -319,9 +319,11 @@ class Ui_MainWindow(object):
         # self.textlabel.setAlignment(QtCore.Qt.AlignLeft)
         self.textlabel.setAlignment(QtCore.Qt.AlignRight)
         self.textlabel.setWordWrap(True)
-        self.textlabel.setFont(QtGui.QFont('Arial', 15))
-        self.textlabel.setText("Hello World")
-        
+        self.textlabel.setFont(QtGui.QFont('Arial', 8))
+        with open(args.cfgfile,'r') as fp:
+            # import pdb;pdb.set_trace()
+            self.textlabel.setText(fp.read())
+        self.textlabel.setStyleSheet("color: lightgreen")
         # self.horizontalLayout.addWidget(self.textlabel)
         
         self.label.setText("")
