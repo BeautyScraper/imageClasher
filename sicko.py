@@ -458,7 +458,8 @@ class Ui_MainWindow(object):
         self.label.bringNextContenderOut()
         self.statusbar.showMessage(self.label.getCurrentcontenderName())
         self.label.resize(self.w, self.h)
-        self.rd.start(args.slidetime * int(stringlen/25))
+        waittime = args.slidetime if args.slidetime * int(stringlen/25) < args.slidetime else args.slidetime * int(stringlen/25)  
+        self.rd.start(waittime)
             
     def arraowEvent(self):
         
@@ -496,7 +497,8 @@ class Ui_MainWindow(object):
         stringlen = len(self.statusbarManipulation())
         self.statusbar.showMessage(self.label.getCurrentcontenderName())
         self.label.resize(self.w, self.h)
-        self.rd.start(args.slidetime * int(stringlen/25))
+        waittime = args.slidetime if args.slidetime * int(stringlen/25) < args.slidetime else args.slidetime * int(stringlen/25)  
+        self.rd.start(waittime)
         # Loser.bringNextContenderOut()
         # self.horizontalLayout.addStretch(1)
         # self.timestamp = time.time()
