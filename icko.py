@@ -30,12 +30,13 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--inputDir', type=dir_path)
 parser.add_argument('--championsDir', type=dir_path)
-parser.add_argument('--MidCardDir', type=dir_path)
+parser.add_argument('--outputDir', type=dir_path)
 parser.add_argument('--DeletablePath', type=dir_path,default=r'C:\temp\deleatble')
 parser.add_argument('--time', type=int)
 parser.add_argument('--winRate', type=int,default=20)
 parser.add_argument('--rand', dest='rand', action='store_true')
 parser.add_argument('--no-rand', dest='rand', action='store_false')
+parser.add_argument('--order', choices=['rand', 'date', 'name'],default='name')
 parser.set_defaults(rand=False)
 
 args = parser.parse_args()
@@ -167,7 +168,11 @@ class Ui_MainWindow(object):
         self.dffilename = Path(args.inputDir) / 'winningRecords.csv'
         self.listI = [str(x) for x in Path(self.path).glob('*.jpg')]
         if args.rand:
+            cyclePoint = random.randint(0, len(self.listI))
+            self.listI = self.listI[cyclePoint::] + self.listI[:cyclePoint:]
+        if args.order == 'rand':
             random.shuffle(self.listI)
+            
         listOfName =  [Path(x).stem for x in self.listI]
         weightM = np.zeros((len(listOfName),1))
         df = pd.DataFrame(weightM,columns=['filename'],index=listOfName)
@@ -216,7 +221,7 @@ class Ui_MainWindow(object):
         # self.moveFiles('listmidCard.txt.opml',r'C:\Heaven\YummyBaked\midCard',False)
         # self.moveFiles('listmidCard.txt.opml',args.MidCardDir,False)
         # self.moveFiles('listdel.txt.opml',args.DeletablePath,False)
-        outputDir = r'D:\paradise\stuff\essence\Pictures\ranked'
+        outputDir = args.outputDir
         with open('del.txt') as fp:
             for filepathstr in fp.readlines():
                 # import pdb;pdb.set_trace()
@@ -286,7 +291,7 @@ class Ui_MainWindow(object):
         self.label.setScaledContents(False)
         self.horizontalLayout.addWidget(self.label)
         self.LeftImage = ClickableLabel(self.horizontalLayoutWidget)
-        self.LeftImage.resize(int(w/2),h)
+        self.LeftImage.resize(int(w/2),int(h))
         self.LeftImage.setList(self.listI[1::2],0.75)
         self.LeftImage.setObjectName("LeftImage")
         
@@ -299,6 +304,10 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        # breakpoint()
+        # self.field_joystick_up_button = QtGui.QToolButton()
+        # self.field_joystick_up_button.setArrowType(QtCore.Qt.UpArrow)
+        
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.arraowEvent(1))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.arraowEvent(0))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up), MainWindow, activated=lambda :MainWindow.setWindowState(QtCore.Qt.WindowMinimized) == MainWindow.close())

@@ -1,0 +1,1 @@
+python "D:\Developed\Automation\imageClasher\icko.py" --inputDir "C:\Heaven\YummyBaker" --outputDir "D:\paradise\stuff\essence\Pictures\ranked" --time 30 --rand --order rand
