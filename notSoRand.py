@@ -11,7 +11,7 @@ def randomLine(fileName="test.txt"):
                 selectedLine = random.choice(inF.readlines())
             except:
                 selectedLine = 'Kuch Nahi'
-            if selectedLine == 'Kuch Nahi' or random.randint(1,100) <= 5:
+            if selectedLine == 'Kuch Nahi' or random.randint(1,100) <= -1:
                os.system('start "" "files\%s"' % (fileName))
             # print("Selected Lines is " + selectedLine)
             while(re.search("\[(.*?)\]",selectedLine)):

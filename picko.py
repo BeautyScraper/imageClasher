@@ -363,7 +363,7 @@ class Ui_MainWindow(object):
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Down), MainWindow, activated=lambda :self.showTheLoser(MainWindow))
         
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_F), MainWindow, activated=lambda :openInBrowser(self.label.getCurrentcontenderName()))
-        QtWidgets.QShortcut(QtGui.QKeySequence("Shift+Left"), MainWindow, activated=self.openTargetDir)
+        # QtWidgets.QShortcut(QtGui.QKeySequence("Shift+Left"), MainWindow, activated=self.openTargetDir)
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_A), MainWindow, activated=self.afterMath)
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_M), MainWindow, activated= toggleFulScreen)
         # QtGui.QKeySequence(QtCore.Qt.ALT + QtCore.Qt.Key_Left).toString()

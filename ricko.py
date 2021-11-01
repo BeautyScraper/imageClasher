@@ -14,7 +14,6 @@ from notSoRand import main
 import Aftermath
 from MyUtility import moveByFastCopy
 import argparse
-import shutil
 
 def dir_path(string):
     if os.path.isdir(string):
@@ -30,13 +29,12 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--inputDir', type=dir_path)
 parser.add_argument('--championsDir', type=dir_path)
-parser.add_argument('--outputDir', type=dir_path)
+parser.add_argument('--MidCardDir', type=dir_path)
 parser.add_argument('--DeletablePath', type=dir_path,default=r'C:\temp\deleatble')
 parser.add_argument('--time', type=int)
 parser.add_argument('--winRate', type=int,default=20)
 parser.add_argument('--rand', dest='rand', action='store_true')
 parser.add_argument('--no-rand', dest='rand', action='store_false')
-parser.add_argument('--order', choices=['rand', 'date', 'name'],default='name')
 parser.set_defaults(rand=False)
 
 args = parser.parse_args()
@@ -60,10 +58,7 @@ def csvReadFile(df,dffilename,listOfName):
         df1 = df1.set_index(df1.columns[0])
 
         df = df1 + df
-        # print(df)
-        # import pdb;pdb.set_trace()
-        # df = df[listOfName].filter(items=listOfName,axis=0)
-        df = df.filter(items=listOfName,axis=0)
+        df = df[listOfName].filter(items=listOfName,axis=0)
         df = df.fillna(0.)
     return df
 
@@ -78,7 +73,7 @@ class ClickableLabel(QtWidgets.QLabel):
     timeToWin = 5000
 
     def noteItDown(self, fileName):
-        with open(fileName, 'a+') as fp:
+        with open('list' + str(fileName) + '.opml', 'a+') as fp:
             fp.write(self.Imagelist[self.currentIndex] + '\n')
     def setList(self,List,ra = 1):
         self.timer=QTimer()
@@ -99,12 +94,7 @@ class ClickableLabel(QtWidgets.QLabel):
     def bringNextContenderOut(self):
         self.timer.timeout.connect(self.changeColor)
         self.currentIndex += 1
-        try:
-            self.redhotmap = QtGui.QPixmap(self.Imagelist[self.currentIndex])
-        except:
-            self.redhotmap = QtGui.QPixmap(self.Imagelist[self.currentIndex-1])
-            self.currentIndex -= 1
-            
+        self.redhotmap = QtGui.QPixmap(self.Imagelist[self.currentIndex])
         self.redhotmap = self.redhotmap.scaled(self.w, self.h, 1, 1)
         self.setPixmap(self.redhotmap)
         self.resize(self.redhotmap.width(),self.redhotmap.height())
@@ -165,19 +155,11 @@ class ClickableLabel(QtWidgets.QLabel):
 class Ui_MainWindow(object):
     path = args.inputDir
     def setupList(self):
-        self.dffilename = Path(args.inputDir) / 'winningRecords.csv'
+        
         self.listI = [str(x) for x in Path(self.path).glob('*.jpg')]
         if args.rand:
-            cyclePoint = random.randint(0, len(self.listI))
-            self.listI = self.listI[cyclePoint::] + self.listI[:cyclePoint:]
-        if args.order == 'rand':
             random.shuffle(self.listI)
-            
         listOfName =  [Path(x).stem for x in self.listI]
-        weightM = np.zeros((len(listOfName),1))
-        df = pd.DataFrame(weightM,columns=['filename'],index=listOfName)
-        print(self.path)
-        self.df = csvReadFile(df,self.dffilename,listOfName)
         # shuffle(self.listI)
         self.ActionList = []
         weightM = np.zeros((len(listOfName),len(listOfName)))
@@ -185,6 +167,9 @@ class Ui_MainWindow(object):
         self.filecount = len(listOfName)
         
     def showTheWinner(self,MainWindow):
+
+
+
         template = 'start "C:\Program Files\IrfanView\i_view64.exe\" /slideshow=%s' %  str(p)
         os.system(template)
 
@@ -216,34 +201,16 @@ class Ui_MainWindow(object):
             moveByFastCopy(txtFile,str(dstPath))
             dels.unlink()
     def closingActions(self,event):
-        # self.moveFiles()
-        # self.moveFiles('listchampions.txt.opml',args.championsDir,False)
+        self.moveFiles()
+        self.moveFiles('listchampions.txt.opml',args.championsDir,False)
         # self.moveFiles('listmidCard.txt.opml',r'C:\Heaven\YummyBaked\midCard',False)
-        # self.moveFiles('listmidCard.txt.opml',args.MidCardDir,False)
-        # self.moveFiles('listdel.txt.opml',args.DeletablePath,False)
-        outputDir = args.outputDir
-        with open('del.txt') as fp:
-            for filepathstr in fp.readlines():
-                # import pdb;pdb.set_trace()
-                fpname = Path(filepathstr.strip()).stem 
-                try:
-                    outDir = Path(outputDir) / str(self.df.loc[fpname][0]) / Path(filepathstr.strip()).name
-                    if not outDir.parent.is_dir():
-                        outDir.parent.mkdir()
-                    # print(outDir)
-                except:
-                    # print('Some problem')
-                    continue
-                shutil.move(filepathstr.strip(), outDir)
-        Path('del.txt').unlink()
-        
-        
-        self.df.to_csv(self.dffilename)
+        self.moveFiles('listmidCard.txt.opml',args.MidCardDir,False)
+        self.moveFiles('listdel.txt.opml',args.DeletablePath,False)
         
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1920, 1000)
-        
+
         MainWindow.closeEvent = self.closingActions
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -254,8 +221,6 @@ class Ui_MainWindow(object):
         w = self.w
         
         self.setupList()
-        
-        
         self.topCard = args.winRate
         self.losersTime = args.time
         ClickableLabel.timeToWin = self.losersTime * 1000
@@ -278,9 +243,7 @@ class Ui_MainWindow(object):
         
         self.label.setText("")
         self.label.setObjectName("label")
-        self.label.resize(int(w/2),h)
-        if len(self.listI) == 0:
-            return
+        self.label.resize(w/2,h)
         self.label.setList(self.listI[0::2])
         fullScreenFlag = [False]
         
@@ -291,7 +254,7 @@ class Ui_MainWindow(object):
         self.label.setScaledContents(False)
         self.horizontalLayout.addWidget(self.label)
         self.LeftImage = ClickableLabel(self.horizontalLayoutWidget)
-        self.LeftImage.resize(int(w/2),int(h))
+        self.LeftImage.resize(w/2,h)
         self.LeftImage.setList(self.listI[1::2],0.75)
         self.LeftImage.setObjectName("LeftImage")
         
@@ -304,10 +267,6 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        # breakpoint()
-        # self.field_joystick_up_button = QtGui.QToolButton()
-        # self.field_joystick_up_button.setArrowType(QtCore.Qt.UpArrow)
-        
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.arraowEvent(1))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.arraowEvent(0))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up), MainWindow, activated=lambda :MainWindow.setWindowState(QtCore.Qt.WindowMinimized) == MainWindow.close())
@@ -383,23 +342,21 @@ class Ui_MainWindow(object):
             Loser = self.label
         winnerName = Winner.getCurrentcontenderName()
         loserName = Loser.getCurrentcontenderName()
-        # Loser.resize(MainWindow.geometry().width()/2,MainWindow.geometry().height()-30)
+        Loser.resize(MainWindow.geometry().width()/2,MainWindow.geometry().height()-30)
         flag = False
         Winner.itWon(Loser.getWinningCount())
         deliberationTime = time.time() - self.timestamp
-        # print(Winner.getWinningCount(), ' winnin', loserName)
-        Loser.noteItDown('del.txt')
-        # if deliberationTime < self.losersTime and Loser.getWinningCount() <= 0:
-            # Loser.noteItDown('del.txt')
-        # else:
-           # Loser.noteItDown('midCard.txt') 
+        print(Winner.getWinningCount(), ' winnin', loserName)
+        if deliberationTime < self.losersTime and Loser.getWinningCount() <= 0:
+            Loser.noteItDown('del.txt')
+        else:
+           Loser.noteItDown('midCard.txt') 
         # if Winner.getWinningCount() >= self.topCard:
            # Winner.setStyleSheet("border: 5px solid black;")
            # Winner.noteItDown('champions.txt') 
         Loser.bringNextContenderOut()
         Winner.bringNextContenderOut()
-        self.df.loc[winnerName] = self.df.loc[winnerName] + self.df.loc[loserName] + 1
-        # self.horizontalLayout.addStretch(1)
+        self.horizontalLayout.addStretch(1)
         self.timestamp = time.time()
 
     def retranslateUi(self, MainWindow):
