@@ -13,7 +13,7 @@ import argparse
 randCmd1 = '--order rand'
 randCmd2 = '--rand'
 
-cmd = 'python "D:\Developed\Automation\imageClasher\icko.py" --inputDir "C:\Heaven\YummyBaker" --outputDir "D:\paradise\stuff\essence\Pictures\\ranked" --time 30 '
+cmd = 'python "D:\Developed\Automation\imageClasher\icko.py" --inputDir "C:\Heaven\YummyBaker" --outputDir "D:\paradise\stuff\essence\Pictures\\ranked2" --time 30 '
 
 x = random.randint(1,100)
 

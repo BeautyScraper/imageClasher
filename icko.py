@@ -192,7 +192,7 @@ class Ui_MainWindow(object):
     def afterMath(self):
         Aftermath.main(Path(self.path))
     def openTargetDir(self):
-        os.system('start "" "%s"' % self.path)
+        os.system('start "" "%s"' % args.outputDir)
         
     def showTheLoser(self,MainWindow):
 
@@ -227,14 +227,16 @@ class Ui_MainWindow(object):
                 # import pdb;pdb.set_trace()
                 fpname = Path(filepathstr.strip()).stem 
                 try:
-                    outDir = Path(outputDir) / str(self.df.loc[fpname][0]) / Path(filepathstr.strip()).name
+                    # outDir = Path(outputDir) / (Path(filepathstr.strip()).stem + ' Won_' + str(int(self.df.loc[fpname][0])) + Path(filepathstr.strip()).suffix)
+                    outDir = Path(outputDir) / str(int(self.df.loc[fpname][0])) / Path(filepathstr.strip()).name
                     if not outDir.parent.is_dir():
-                        outDir.parent.mkdir()
+                        outDir.parent.mkdir(parents=True)
                     # print(outDir)
                 except:
                     # print('Some problem')
                     continue
-                shutil.move(filepathstr.strip(), outDir)
+                if Path(filepathstr.strip()).is_file():
+                    shutil.move(filepathstr.strip(), outDir)
         Path('del.txt').unlink()
         
         
@@ -396,11 +398,13 @@ class Ui_MainWindow(object):
         # if Winner.getWinningCount() >= self.topCard:
            # Winner.setStyleSheet("border: 5px solid black;")
            # Winner.noteItDown('champions.txt') 
-        Loser.bringNextContenderOut()
-        Winner.bringNextContenderOut()
         self.df.loc[winnerName] = self.df.loc[winnerName] + self.df.loc[loserName] + 1
+        print(loserName , 'lost to', winnerName)
+        Winner.bringNextContenderOut()
+        if random.randint(1,100) < 80:
+            Loser.bringNextContenderOut()
         # self.horizontalLayout.addStretch(1)
-        self.timestamp = time.time()
+        # self.timestamp = time.time()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
