@@ -3,6 +3,8 @@ from PyQt5.QtCore import QTimer
 from pathlib import Path
 import sys
 
+
+import shutil
 import pandas as pd
 from random import shuffle
 import random
@@ -255,8 +257,31 @@ class Ui_MainWindow(object):
                 dstPath = Path(self.path) / moveToDit
             moveByFastCopy(txtFile,str(dstPath),moveAction)
             dels.unlink()
+    def movecorrFiles(self,txtFile = 'listdnbh.txt.opml', moveToDit = 'dnbh',relative=True,moveAction='force_copy'):
+        if not Path(txtFile).is_file():
+            return
+        filestoMove = []
+        with open(txtFile, 'r') as fp:
+            for pths in fp.readlines():
+                fpath = Path(pths.strip())
+                if not fpath.is_file():
+                    continue
+                updatedName = fpath.parent.name + ' me chudi ' + fpath.name
+                upath = fpath.parent / updatedName
+                shutil.move(fpath,upath)
+                # print(fpath,upath)
+                filestoMove.append(str(upath)+ '\n')
+        with open(txtFile,'w') as fp:
+            fp.writelines(filestoMove)
+        self.moveFiles(txtFile,moveToDit,relative,moveAction)
+            
+                
     def closingActions(self,event):
         for tb in self.actions:
+            if tb.actiontype == 'corr_move': 
+                # print(tb.targetDir)
+                self.movecorrFiles(tb.notedownfile,tb.targetDir,False,'force_copy')
+                continue
             self.moveFiles(tb.notedownfile,tb.targetDir,False,'force_copy')
         # breakpoint()
         
