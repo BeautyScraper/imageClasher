@@ -1,0 +1,113 @@
+[33mcommit 338c6771d9b28eaa13ca633f27c7dbb7880db567[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Merge: 93624c4 e485746
+Author: Your Name <you@example.com>
+Date:   Mon Nov 1 07:53:05 2021 +0530
+
+    from desktop
+
+[33mcommit 93624c4f661abe9afd1138f3d8d7d23f844b0019[m
+Author: Your Name <you@example.com>
+Date:   Mon Nov 1 07:36:06 2021 +0530
+
+    Rejuvanting hp laptop
+    
+    Revert "some tweaks"
+    
+    This reverts commit fc78659be2c1f783ee7cb92febd40a974a02e345.
+
+[33mcommit e4857465163a589eab501014401ca0a6306e4326[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: HP <sstico0@gmail.com>
+Date:   Sun Oct 31 08:37:21 2021 +0530
+
+    something
+
+[33mcommit 0adccc5a7263ad0a4d33c4dd9df713d609e5feaa[m
+Author: HP <sstico0@gmail.com>
+Date:   Fri Oct 22 12:27:40 2021 +0530
+
+    improved clashing
+
+[33mcommit abf4712064acdcf9079e2b7c1abd9e3bc456d2ac[m
+Author: HP <sstico0@gmail.com>
+Date:   Mon Oct 18 08:08:43 2021 +0530
+
+    more tweaks
+
+[33mcommit fc78659be2c1f783ee7cb92febd40a974a02e345[m
+Author: Your Name <you@example.com>
+Date:   Sat Oct 16 22:40:58 2021 +0530
+
+    some tweaks
+
+[33mcommit b4b1b54f50b26c7bed8f722796cc45ab0ebd26e1[m
+Author: Your Name <you@example.com>
+Date:   Sat Oct 16 14:34:40 2021 +0530
+
+    added slideshow for input dir
+
+[33mcommit d6352ecbba202643a63d67cbccb62da8f8a29e94[m
+Merge: f147ca5 0ae6502
+Author: Your Name <you@example.com>
+Date:   Sat Oct 16 13:50:21 2021 +0530
+
+    Done
+
+[33mcommit f147ca5af0f9d65acddd32bc79c28f9145b1cc10[m
+Author: Your Name <you@example.com>
+Date:   Sat Oct 16 13:38:16 2021 +0530
+
+    added slideshow for input dir
+
+[33mcommit 2dfc6e795f6098dea89b4d6ba6f101e16679b3a2[m[33m ([m[1;31morigin/HPlaptop[m[33m, [m[1;32mHPlaptop[m[33m)[m
+Author: Your Name <you@example.com>
+Date:   Sat Oct 16 11:39:22 2021 +0530
+
+    included baked picker and support for cfg printing
+
+[33mcommit dea07396aa4479d2da7693e3e561b5433bd3bbed[m
+Author: Your Name <you@example.com>
+Date:   Sat Oct 16 00:19:30 2021 +0530
+
+    sicko completed
+
+[33mcommit 4768b07e82c59fcc85defc7cab11c01a29995ec3[m
+Author: Your Name <you@example.com>
+Date:   Thu Oct 14 13:53:32 2021 +0530
+
+    created new branch
+
+[33mcommit dde0e42613e294895af4743e7ea9b64634ec3641[m
+Author: Your Name <you@example.com>
+Date:   Wed Oct 13 22:47:11 2021 +0530
+
+    from HpLappy
+
+[33mcommit 0ae6502eb5cb918fca20f0b47bc50e481316d53b[m
+Author: HP <sstico0@gmail.com>
+Date:   Tue Oct 12 20:33:07 2021 +0530
+
+    all
+
+[33mcommit 9364b7d2706be2589efa73e7d500188624427d83[m
+Author: HP <sstico0@gmail.com>
+Date:   Sun Oct 10 12:42:28 2021 +0530
+
+    cko done
+
+[33mcommit fe47b7b192364c48f35a14183dcd44ab5288a8ed[m
+Author: HP <sstico0@gmail.com>
+Date:   Tue Sep 21 22:21:18 2021 +0530
+
+    icko and ticko added
+
+[33mcommit 4aeeaf2a5b5ab3a618d3c1ea28c5580bd3d307f3[m
+Author: Your Name <you@example.com>
+Date:   Sat May 22 11:36:01 2021 +0530
+
+    clasher done almost3
+
+[33mcommit c378a05893c96c56a350c6192002cf192094dfec[m
+Author: Your Name <you@example.com>
+Date:   Sun Mar 28 13:08:25 2021 +0530
+
+    first

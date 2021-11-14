@@ -1,0 +1,1 @@
+python "D:\Developed\Automation\imageClasher\gripo.py" --inputDir "D:\paradise\stuff\new\pvd2" --cfgfile gripo.cfg --rows 2

@@ -33,7 +33,8 @@ parser.add_argument('--inputDir', type=dir_path)
 # parser.add_argument('--outputDir', type=dir_path)
 parser.add_argument('--cfgfile', type=dir_path,default='pickoactions.cfg')
 # parser.add_argument('--DeletablePath', type=dir_path,default=r'C:\temp\deleatble')
-# parser.add_argument('--time', type=int)
+parser.add_argument('--rows', type=int,default=4)
+parser.add_argument('--columns', type=int,default=5)
 # parser.add_argument('--winRate', type=int,default=20)
 parser.add_argument('--rand', dest='rand', action='store_true')
 parser.add_argument('--no-rand', dest='rand', action='store_false')
@@ -119,8 +120,8 @@ class ClickableLabel(QtWidgets.QLabel):
         self.setPixmap(self.redhotmap)
         self.resize(self.redhotmap.width(),self.redhotmap.height())
         self.setAlignment(QtCore.Qt.AlignTop)
-        self.winningCount = 0 
-        self.timer.stop()
+        # self.winningCount = 0 
+        # self.timer.stop()
         self.setStyleSheet("background-color: black") 
         # self.timer.start(ClickableLabel.timeToWin)
     
@@ -133,8 +134,8 @@ class ClickableLabel(QtWidgets.QLabel):
         return self.winningCount
     
     def bringPreviousContenderOut(self):
-        self.timer.stop()
-        self.setStyleSheet("background-color: black") 
+        # self.timer.stop()
+        # self.setStyleSheet("background-color: black") 
         # self.timer.start(ClickableLabel.timeToWin)
         self.currentIndex -= 1
         self.redhotmap = QtGui.QPixmap(self.Imagelist[self.currentIndex])
@@ -255,8 +256,9 @@ class Ui_MainWindow(object):
         screenw = 1920
         screenh = 1000
         MainWindow.resize(screenw, screenh)
-        rows = 4
-        columns = 5
+        self.scannedFiles = 0
+        rows = args.rows
+        columns = args.columns
         self.picInWin = rows * columns
         cellArea = (screenw * screenh) / self.picInWin
         self.cellheight = screenh / rows
@@ -334,7 +336,7 @@ class Ui_MainWindow(object):
                 LeftImage = ClickableLabel(self.horizontalLayoutWidget)
                 # LeftImage.resize(self.cellwidth,self.cellheight)
                 LeftImage.resize(self.cellwidth,self.cellheight)
-                LeftImage.setList(self.listI[i::self.picInWin])
+                LeftImage.setList(self.listI[i::self.picInWin-1])
                 LeftImage.setObjectName("LeftImage")
                 # LeftImage.clicked.connect(lambda :LeftImage.noteItDown('l.txt'))
                 # LeftImage.Rclicked.connect(lambda :LeftImage.noteItDown('r.txt'))
@@ -356,7 +358,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(b1,rows-1,columns-1)
         # b1.resize(self.cellwidth/2,self.cellheight)
         # self.horizontalLayout.addWidget(b2,rows-1,columns-1)
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Down), MainWindow, activated=self.arraowEvent)
+        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), MainWindow, activated=self.arraowEvent)
+        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), MainWindow, activated=self.previousall)
         # self.horizontalLayout.addWidget(self.textlabel)
         MainWindow.setCentralWidget(self.centralwidget)
         self.horizontalLayout.setAlignment(QtCore.Qt.AlignTop)
@@ -408,12 +411,25 @@ class Ui_MainWindow(object):
         else:
             self.AssignRole()
     
+    def previousall(self):
+        
+        # print('its executinh')
+        for cell in self.cells:
+            # cell.noteItDown(self.defaultaction.notedownfile)
+            cell.bringPreviousContenderOut()
+        
+        self.scannedFiles -= self.picInWin - 1 
+        self.statusbar.showMessage(str(self.scannedFiles) + '/'+ str(len(self.listI)) )
+    
     def arraowEvent(self):
         
         # print('its executinh')
         for cell in self.cells:
             cell.noteItDown(self.defaultaction.notedownfile)
             cell.bringNextContenderOut()
+        
+        self.scannedFiles += self.picInWin - 1 
+        self.statusbar.showMessage(str(self.scannedFiles) + '/'+ str(len(self.listI)) )
         # Loser.resize(MainWindow.geometry().width()/2,MainWindow.geometry().height()-30)
         # flag = False
         # Winner.itWon(Loser.getWinningCount())
