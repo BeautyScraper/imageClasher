@@ -85,7 +85,7 @@ class ClickableLabel(QtWidgets.QLabel):
     # timeToWin = 5000
 
     def noteItDown(self, fileName):
-        print(self.Imagelist[self.currentIndex])
+        # print(self.Imagelist[self.currentIndex])
         with open(fileName, 'a+') as fp:
             fp.write(self.Imagelist[self.currentIndex] + '\n')
     def setList(self,List,ra = 1):
@@ -164,7 +164,7 @@ class ClickableLabel(QtWidgets.QLabel):
         rightPressed = QMouseEvent.button() == QtCore.Qt.RightButton
         ctrlPressed = modifiers == QtCore.Qt.ControlModifier
         if leftPressed and not ctrlPressed:
-            print('left button pressed')
+            # print('left button pressed')
             self.noteItDown('l.txt')
             # self.clicked.emit()
         if rightPressed and not ctrlPressed :
@@ -329,6 +329,8 @@ class Ui_MainWindow(object):
         self.cells = []
         for r in range(rows):
             for c in range(columns):
+                if (r+1) * (c+1) >= self.picInWin:
+                    break
                 LeftImage = ClickableLabel(self.horizontalLayoutWidget)
                 # LeftImage.resize(self.cellwidth,self.cellheight)
                 LeftImage.resize(self.cellwidth,self.cellheight)
@@ -340,7 +342,20 @@ class Ui_MainWindow(object):
                 self.cells.append(LeftImage)
                 i += 1
         # self.LeftImage.clicked.connect(lambda x=acts.notedownfile:self.label.noteItDownre(x))
-        
+        b1 = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        b1.setText("next")
+        # b1.setGeometry(0,0,self.cellwidth/2,self.cellheight)     
+        b1.resize(self.cellwidth/2,self.cellheight)
+        # b1.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
+        b1.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
+        # b1.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Fixed)
+        b1.clicked.connect(self.arraowEvent)
+        # b2 = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        # b2.setText("click me")
+        # b2.resize(self.cellwidth/2,self.cellheight)
+        self.horizontalLayout.addWidget(b1,rows-1,columns-1)
+        # b1.resize(self.cellwidth/2,self.cellheight)
+        # self.horizontalLayout.addWidget(b2,rows-1,columns-1)
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Down), MainWindow, activated=self.arraowEvent)
         # self.horizontalLayout.addWidget(self.textlabel)
         MainWindow.setCentralWidget(self.centralwidget)
