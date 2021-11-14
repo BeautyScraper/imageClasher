@@ -72,7 +72,7 @@ def csvReadFile(df,dffilename,listOfName):
 class action:
     def __init__(self,keys,targetDir,actiontype='move'):
         self.keys = keys
-        self.notedownfile = str(hash(targetDir))+ '.txt'
+        self.notedownfile = keys + '.txt'
         self.targetDir = targetDir
         self.actiontype = actiontype
         
@@ -163,6 +163,7 @@ class ClickableLabel(QtWidgets.QLabel):
         rightPressed = QMouseEvent.button() == QtCore.Qt.RightButton
         ctrlPressed = modifiers == QtCore.Qt.ControlModifier
         if leftPressed and not ctrlPressed:
+            print('left button pressed')
             self.clicked.emit()
         if rightPressed and not ctrlPressed :
             self.Rclicked.emit()
@@ -183,13 +184,13 @@ class Ui_MainWindow(object):
             random.shuffle(self.listI)
             
         listOfName =  [Path(x).stem for x in self.listI]
-        weightM = np.zeros((len(listOfName),1))
-        df = pd.DataFrame(weightM,columns=['filename'],index=listOfName)
-        print(self.path)
-        self.df = csvReadFile(df,self.dffilename,listOfName)
+        # weightM = np.zeros((len(listOfName),1))
+        # df = pd.DataFrame(weightM,columns=['filename'],index=listOfName)
+        # print(self.path)
+        # self.df = csvReadFile(df,self.dffilename,listOfName)
         # shuffle(self.listI)
         self.ActionList = []
-        weightM = np.zeros((len(listOfName),len(listOfName)))
+        # weightM = np.zeros((len(listOfName),len(listOfName)))
         self.listOfName = listOfName
         self.filecount = len(listOfName)
         
@@ -237,7 +238,7 @@ class Ui_MainWindow(object):
                 fpname = Path(filepathstr.strip()).stem 
                 try:
                     # outDir = Path(outputDir) / (Path(filepathstr.strip()).stem + ' Won_' + str(int(self.df.loc[fpname][0])) + Path(filepathstr.strip()).suffix)
-                    outDir = Path(outputDir) / str(int(self.df.loc[fpname][0])) / Path(filepathstr.strip()).name
+                    # outDir = Path(outputDir) / str(int(self.df.loc[fpname][0])) / Path(filepathstr.strip()).name
                     if not outDir.parent.is_dir():
                         outDir.parent.mkdir(parents=True)
                     # print(outDir)
@@ -249,7 +250,7 @@ class Ui_MainWindow(object):
         Path('del.txt').unlink()
         
         
-        self.df.to_csv(self.dffilename)
+        # self.df.to_csv(self.dffilename)
         
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -324,13 +325,16 @@ class Ui_MainWindow(object):
         
         # self.label.setScaledContents(False)
         # self.horizontalLayout.addWidget(self.label)
-        self.LeftImage = ClickableLabel(self.horizontalLayoutWidget)
-        self.LeftImage.resize(int(w/2),int(h))
-        self.LeftImage.setList(self.listI[1::2],0.75)
-        self.LeftImage.setObjectName("LeftImage")
+        for i in range(self.picInWin):
+            LeftImage = ClickableLabel(self.horizontalLayoutWidget)
+            LeftImage.resize(self.cellwidth,self.cellheight)
+            LeftImage.setList(self.listI[i::self.picInWin])
+            LeftImage.setObjectName("LeftImage")
+            LeftImage.clicked.connect(lambda :LeftImage.noteItDown('l.txt'))
+            LeftImage.Rclicked.connect(lambda :LeftImage.noteItDown('r.txt'))
+            self.horizontalLayout.addWidget(LeftImage)
+        # self.LeftImage.clicked.connect(lambda x=acts.notedownfile:self.label.noteItDownre(x))
         
-        
-        self.horizontalLayout.addWidget(self.LeftImage)
         # self.horizontalLayout.addWidget(self.textlabel)
         MainWindow.setCentralWidget(self.centralwidget)
         self.horizontalLayout.setAlignment(QtCore.Qt.AlignTop)
@@ -396,7 +400,7 @@ class Ui_MainWindow(object):
         # Loser.resize(MainWindow.geometry().width()/2,MainWindow.geometry().height()-30)
         flag = False
         Winner.itWon(Loser.getWinningCount())
-        deliberationTime = time.time() - self.timestamp
+        # deliberationTime = time.time() - self.timestamp
         # print(Winner.getWinningCount(), ' winnin', loserName)
         Loser.noteItDown('del.txt')
         # if deliberationTime < self.losersTime and Loser.getWinningCount() <= 0:
@@ -406,7 +410,7 @@ class Ui_MainWindow(object):
         # if Winner.getWinningCount() >= self.topCard:
            # Winner.setStyleSheet("border: 5px solid black;")
            # Winner.noteItDown('champions.txt') 
-        self.df.loc[winnerName] = self.df.loc[winnerName] + self.df.loc[loserName] + 1
+        # self.df.loc[winnerName] = self.df.loc[winnerName] + self.df.loc[loserName] + 1
         print(loserName , 'lost to', winnerName)
         Winner.bringNextContenderOut()
         if random.randint(1,100) < 80:
