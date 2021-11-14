@@ -79,17 +79,18 @@ class action:
  
 
 class ClickableLabel(QtWidgets.QLabel):
-    clicked = QtCore.pyqtSignal()
     CtrlClicked = QtCore.pyqtSignal()
-    Rclicked = QtCore.pyqtSignal()
     CtrlRclicked = QtCore.pyqtSignal()
     winningCount = 0
     # timeToWin = 5000
 
     def noteItDown(self, fileName):
+        print(self.Imagelist[self.currentIndex])
         with open(fileName, 'a+') as fp:
             fp.write(self.Imagelist[self.currentIndex] + '\n')
     def setList(self,List,ra = 1):
+        self.clicked = QtCore.pyqtSignal()
+        self.Rclicked = QtCore.pyqtSignal()
         self.timer=QTimer()
         self.rightOne = ra
         self.Imagelist = List
@@ -164,13 +165,17 @@ class ClickableLabel(QtWidgets.QLabel):
         ctrlPressed = modifiers == QtCore.Qt.ControlModifier
         if leftPressed and not ctrlPressed:
             print('left button pressed')
-            self.clicked.emit()
+            self.noteItDown('l.txt')
+            # self.clicked.emit()
         if rightPressed and not ctrlPressed :
-            self.Rclicked.emit()
+            self.noteItDown('r.txt')
+            # self.Rclicked.emit()
         if leftPressed and ctrlPressed:
-            self.CtrlClicked.emit()
+            pass
+            # self.CtrlClicked.emit()
         if rightPressed and ctrlPressed:
-            self.CtrlRclicked.emit()
+            pass
+            # self.CtrlRclicked.emit()
 
 class Ui_MainWindow(object):
     path = args.inputDir
@@ -217,13 +222,13 @@ class Ui_MainWindow(object):
         print(template)
         os.system(template)
 
-    def moveFiles(self,txtFile = 'listdnbh.txt.opml', moveToDit = 'dnbh',relative=True):
+    def moveFiles(self,txtFile = 'listdnbh.txt.opml', moveToDit = 'dnbh',relative=True,moveAction='force_copy'):
         dels = Path(txtFile)
         if dels.is_file():
             dstPath =Path(moveToDit)
             if relative:
                 dstPath = Path(self.path) / moveToDit
-            moveByFastCopy(txtFile,str(dstPath))
+            moveByFastCopy(txtFile,str(dstPath),moveAction)
             dels.unlink()
     def closingActions(self,event):
         # self.moveFiles()
@@ -232,22 +237,15 @@ class Ui_MainWindow(object):
         # self.moveFiles('listmidCard.txt.opml',args.MidCardDir,False)
         # self.moveFiles('listdel.txt.opml',args.DeletablePath,False)
         # outputDir = args.outputDir
-        with open('del.txt') as fp:
-            for filepathstr in fp.readlines():
-                # import pdb;pdb.set_trace()
-                fpname = Path(filepathstr.strip()).stem 
-                try:
-                    # outDir = Path(outputDir) / (Path(filepathstr.strip()).stem + ' Won_' + str(int(self.df.loc[fpname][0])) + Path(filepathstr.strip()).suffix)
-                    # outDir = Path(outputDir) / str(int(self.df.loc[fpname][0])) / Path(filepathstr.strip()).name
-                    if not outDir.parent.is_dir():
-                        outDir.parent.mkdir(parents=True)
-                    # print(outDir)
-                except:
-                    # print('Some problem')
-                    continue
-                if Path(filepathstr.strip()).is_file():
-                    shutil.move(filepathstr.strip(), outDir)
-        Path('del.txt').unlink()
+        for tb in self.actions:
+            if tb.actiontype == 'corr_move': 
+                # print(tb.targetDir)
+                self.movecorrFiles(tb.notedownfile,tb.targetDir,False,'force_copy')
+                continue
+            self.moveFiles(tb.notedownfile,tb.targetDir,False,'force_copy')
+        # breakpoint()
+        
+        self.moveFiles(self.defaultaction.notedownfile,self.defaultaction.targetDir,False,'move')
         
         
         # self.df.to_csv(self.dffilename)
@@ -257,10 +255,12 @@ class Ui_MainWindow(object):
         screenw = 1920
         screenh = 1000
         MainWindow.resize(screenw, screenh)
-        self.picInWin = 20
+        rows = 4
+        columns = 5
+        self.picInWin = rows * columns
         cellArea = (screenw * screenh) / self.picInWin
-        self.cellheight = screenh / self.picInWin
-        self.cellwidth = screenw / self.picInWin
+        self.cellheight = screenh / rows
+        self.cellwidth = screenw / columns
         cfgfilename = args.cfgfile
         self.actions = []
         with open(cfgfilename,'r') as fp:
@@ -296,7 +296,7 @@ class Ui_MainWindow(object):
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, w, h))
 
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout = QtWidgets.QGridLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.horizontalLayout.setAlignment(QtCore.Qt.AlignTop)
@@ -325,16 +325,23 @@ class Ui_MainWindow(object):
         
         # self.label.setScaledContents(False)
         # self.horizontalLayout.addWidget(self.label)
-        for i in range(self.picInWin):
-            LeftImage = ClickableLabel(self.horizontalLayoutWidget)
-            LeftImage.resize(self.cellwidth,self.cellheight)
-            LeftImage.setList(self.listI[i::self.picInWin])
-            LeftImage.setObjectName("LeftImage")
-            LeftImage.clicked.connect(lambda :LeftImage.noteItDown('l.txt'))
-            LeftImage.Rclicked.connect(lambda :LeftImage.noteItDown('r.txt'))
-            self.horizontalLayout.addWidget(LeftImage)
+        i = 0
+        self.cells = []
+        for r in range(rows):
+            for c in range(columns):
+                LeftImage = ClickableLabel(self.horizontalLayoutWidget)
+                # LeftImage.resize(self.cellwidth,self.cellheight)
+                LeftImage.resize(self.cellwidth,self.cellheight)
+                LeftImage.setList(self.listI[i::self.picInWin])
+                LeftImage.setObjectName("LeftImage")
+                # LeftImage.clicked.connect(lambda :LeftImage.noteItDown('l.txt'))
+                # LeftImage.Rclicked.connect(lambda :LeftImage.noteItDown('r.txt'))
+                self.horizontalLayout.addWidget(LeftImage,r,c)
+                self.cells.append(LeftImage)
+                i += 1
         # self.LeftImage.clicked.connect(lambda x=acts.notedownfile:self.label.noteItDownre(x))
         
+        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Down), MainWindow, activated=self.arraowEvent)
         # self.horizontalLayout.addWidget(self.textlabel)
         MainWindow.setCentralWidget(self.centralwidget)
         self.horizontalLayout.setAlignment(QtCore.Qt.AlignTop)
@@ -386,23 +393,18 @@ class Ui_MainWindow(object):
         else:
             self.AssignRole()
     
-    def arraowEvent(self,WinningSide):
+    def arraowEvent(self):
         
-        
-        self.statusbarManipulation()
-        Winner = self.label
-        Loser = self.LeftImage
-        if WinningSide == 0:
-            Winner = self.LeftImage
-            Loser = self.label
-        winnerName = Winner.getCurrentcontenderName()
-        loserName = Loser.getCurrentcontenderName()
+        # print('its executinh')
+        for cell in self.cells:
+            cell.noteItDown(self.defaultaction.notedownfile)
+            cell.bringNextContenderOut()
         # Loser.resize(MainWindow.geometry().width()/2,MainWindow.geometry().height()-30)
-        flag = False
-        Winner.itWon(Loser.getWinningCount())
+        # flag = False
+        # Winner.itWon(Loser.getWinningCount())
         # deliberationTime = time.time() - self.timestamp
         # print(Winner.getWinningCount(), ' winnin', loserName)
-        Loser.noteItDown('del.txt')
+        # Loser.noteItDown('del.txt')
         # if deliberationTime < self.losersTime and Loser.getWinningCount() <= 0:
             # Loser.noteItDown('del.txt')
         # else:
@@ -411,10 +413,10 @@ class Ui_MainWindow(object):
            # Winner.setStyleSheet("border: 5px solid black;")
            # Winner.noteItDown('champions.txt') 
         # self.df.loc[winnerName] = self.df.loc[winnerName] + self.df.loc[loserName] + 1
-        print(loserName , 'lost to', winnerName)
-        Winner.bringNextContenderOut()
-        if random.randint(1,100) < 80:
-            Loser.bringNextContenderOut()
+        # print(loserName , 'lost to', winnerName)
+        # Winner.bringNextContenderOut()
+        # if random.randint(1,100) < 80:
+            # Loser.bringNextContenderOut()
         # self.horizontalLayout.addStretch(1)
         # self.timestamp = time.time()
 
