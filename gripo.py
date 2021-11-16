@@ -346,16 +346,19 @@ class Ui_MainWindow(object):
         # self.LeftImage.clicked.connect(lambda x=acts.notedownfile:self.label.noteItDownre(x))
         b1 = QtWidgets.QPushButton(self.horizontalLayoutWidget)
         b1.setText("next")
+        # print(self.cells)
         # b1.setGeometry(0,0,self.cellwidth/2,self.cellheight)     
-        b1.resize(self.cellwidth/2,self.cellheight)
+        # b1.resize(self.cellwidth/2,self.cellheight)
         # b1.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
-        b1.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
+        # b1.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
         # b1.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Fixed)
+        # ji = 0
+        b1.setGeometry(MainWindow.geometry().width()-self.cellwidth,MainWindow.geometry().height()-self.cellheight,int(self.cellwidth/2),self.cellheight)  
         b1.clicked.connect(self.arraowEvent)
         # b2 = QtWidgets.QPushButton(self.horizontalLayoutWidget)
         # b2.setText("click me")
         # b2.resize(self.cellwidth/2,self.cellheight)
-        self.horizontalLayout.addWidget(b1,rows-1,columns-1)
+        # self.horizontalLayout.addWidget(b1,rows-1,columns-1)
         # b1.resize(self.cellwidth/2,self.cellheight)
         # self.horizontalLayout.addWidget(b2,rows-1,columns-1)
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), MainWindow, activated=self.arraowEvent)
@@ -363,6 +366,10 @@ class Ui_MainWindow(object):
         # self.horizontalLayout.addWidget(self.textlabel)
         MainWindow.setCentralWidget(self.centralwidget)
         self.horizontalLayout.setAlignment(QtCore.Qt.AlignTop)
+        # ji = 0
+        # print(self.cells[ji].geometry().x(),self.cells[ji].geometry().y())
+        # ji = -1
+        # print(self.cells[ji].geometry().x(),self.cells[ji].geometry().y())
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
@@ -427,6 +434,7 @@ class Ui_MainWindow(object):
         for cell in self.cells:
             cell.noteItDown(self.defaultaction.notedownfile)
             cell.bringNextContenderOut()
+            # print(cell.geometry())  
         
         self.scannedFiles += self.picInWin - 1 
         self.statusbar.showMessage(str(self.scannedFiles) + '/'+ str(len(self.listI)) )

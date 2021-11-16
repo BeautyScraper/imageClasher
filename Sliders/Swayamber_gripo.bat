@@ -1,0 +1,1 @@
+python "D:\Developed\Automation\imageClasher\gripo.py" --inputDir "C:\GalImgs\NewBabes" --cfgfile Swayamber_gripo.cfg --rows 2
