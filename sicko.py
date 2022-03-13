@@ -487,6 +487,7 @@ class Ui_MainWindow(object):
            # Winner.setStyleSheet("border: 5px solid black;")
            # Winner.noteItDown('champions.txt') 
         # for _ in range(count):
+        stringlen = len(self.statusbarManipulation())
         self.label.noteItDown(self.defaultaction.notedownfile) 
         self.label.bringNextContenderOut()
         self.statusbar.showMessage(self.label.getCurrentcontenderName())

@@ -207,8 +207,8 @@ class Ui_MainWindow(object):
         
     def afterMath(self):
         Aftermath.main(Path(self.path))
-    def openTargetDir(self):
-        os.system('start "" "%s"' % args.outputDir)
+    def openTargetDir(self,directory_path):
+        os.system('start "" "%s"' % directory_path)
         
     def showTheLoser(self,MainWindow):
 
@@ -344,9 +344,13 @@ class Ui_MainWindow(object):
                 self.cells.append(LeftImage)
                 i += 1
         # self.LeftImage.clicked.connect(lambda x=acts.notedownfile:self.label.noteItDownre(x))
+        
+        
+        
         b1 = QtWidgets.QPushButton(self.horizontalLayoutWidget)
         b1.setText("next")
-
+        for acts in self.actions:
+            QtWidgets.QShortcut(QtGui.QKeySequence('Shift+' + acts.keys), MainWindow, activated=lambda x=acts.targetDir:self.openTargetDir(x))    
         b1.setGeometry(MainWindow.geometry().width()-self.cellwidth,MainWindow.geometry().height()-self.cellheight,int(self.cellwidth/2),self.cellheight)  
         b1.clicked.connect(self.arraowEvent)
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left),MainWindow, activated=self.arraowEvent)

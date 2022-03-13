@@ -268,7 +268,7 @@ class Ui_MainWindow(object):
                     continue
                 updatedName = fpath.parent.name + ' me chudi ' + fpath.name
                 upath = fpath.parent / updatedName
-                shutil.move(fpath,upath)
+                shutil.copy(fpath,upath)
                 # print(fpath,upath)
                 filestoMove.append(str(upath)+ '\n')
         with open(txtFile,'w') as fp:
