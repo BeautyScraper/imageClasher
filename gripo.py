@@ -1,3 +1,4 @@
+from tkinter.messagebox import NO
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QTimer
 from pathlib import Path
@@ -85,8 +86,12 @@ class ClickableLabel(QtWidgets.QLabel):
     winningCount = 0
     # timeToWin = 5000
 
-    def noteItDown(self, fileName):
+    def noteItDown(self, fileName,bolor=None):
         # print(self.Imagelist[self.currentIndex])
+        if bolor is None: 
+            self.setStyleSheet("background-color: lightgreen")
+        else:
+            self.setStyleSheet("background-color: " + bolor)
         with open(fileName, 'a+') as fp:
             fp.write(self.Imagelist[self.currentIndex] + '\n')
     def setList(self,List,ra = 1):
@@ -166,10 +171,11 @@ class ClickableLabel(QtWidgets.QLabel):
         ctrlPressed = modifiers == QtCore.Qt.ControlModifier
         if leftPressed and not ctrlPressed:
             # print('left button pressed')
+            
             self.noteItDown('l.txt')
             # self.clicked.emit()
         if rightPressed and not ctrlPressed :
-            self.noteItDown('r.txt')
+            self.noteItDown('r.txt','blue')
             # self.Rclicked.emit()
         if leftPressed and ctrlPressed:
             pass
@@ -343,6 +349,21 @@ class Ui_MainWindow(object):
                 self.horizontalLayout.addWidget(LeftImage,r,c)
                 self.cells.append(LeftImage)
                 i += 1
+        r_keys_list = [
+                    QtCore.Qt.Key_Delete, 
+                    QtCore.Qt.Key_End,
+                    QtCore.Qt.Key_PageDown,
+                    ]
+        for r_key,r_cell in zip(r_keys_list,self.cells[::int(len(self.cells)/len(r_keys_list))]):
+            QtWidgets.QShortcut(QtGui.QKeySequence(r_key), r_cell, activated=lambda x=r_cell:x.noteItDown('r.txt','blue'))
+        # self.LeftImage.clicked.connect(lambda x=acts.notedownfile:self.label.noteItDownre(x))
+        l_keys_list = [
+                    QtCore.Qt.Key_1, 
+                    QtCore.Qt.Key_2, 
+                    QtCore.Qt.Key_3, 
+                    ]
+        for r_key,r_cell in zip(l_keys_list,self.cells[::int(len(self.cells)/len(l_keys_list))]):
+            QtWidgets.QShortcut(QtGui.QKeySequence(r_key),r_cell, activated=lambda x=r_cell:x.noteItDown('l.txt'))
         # self.LeftImage.clicked.connect(lambda x=acts.notedownfile:self.label.noteItDownre(x))
         
         
