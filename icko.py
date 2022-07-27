@@ -386,9 +386,9 @@ class Ui_MainWindow(object):
         winnerName = Winner.getCurrentcontenderName()
         loserName = Loser.getCurrentcontenderName()
         # Loser.resize(MainWindow.geometry().width()/2,MainWindow.geometry().height()-30)
-        flag = False
-        Winner.itWon(Loser.getWinningCount())
-        deliberationTime = time.time() - self.timestamp
+        # flag = False
+        # Winner.itWon(Loser.getWinningCount())
+        # deliberationTime = time.time() - self.timestamp
         # print(Winner.getWinningCount(), ' winnin', loserName)
         Loser.noteItDown('del.txt')
         # if deliberationTime < self.losersTime and Loser.getWinningCount() <= 0:
