@@ -246,23 +246,24 @@ class Ui_MainWindow(object):
         # self.moveFiles('listmidCard.txt.opml',r'C:\Heaven\YummyBaked\midCard',False)
         # self.moveFiles('listmidCard.txt.opml',args.MidCardDir,False)
         # self.moveFiles('listdel.txt.opml',args.DeletablePath,False)
-        outputDir = args.outputDir
-        with open('del.txt') as fp:
-            for filepathstr in fp.readlines():
-                # import pdb;pdb.set_trace()
-                fpname = Path(filepathstr.strip()).stem 
-                try:
-                    # outDir = Path(outputDir) / (Path(filepathstr.strip()).stem + ' Won_' + str(int(self.df.loc[fpname][0])) + Path(filepathstr.strip()).suffix)
-                    outDir = Path(outputDir) / str(int(self.df.loc[fpname][0])) / Path(filepathstr.strip()).name
-                    if not outDir.parent.is_dir():
-                        outDir.parent.mkdir(parents=True)
-                    # print(outDir)
-                except:
-                    # print('Some problem')
-                    continue
-                if Path(filepathstr.strip()).is_file():
-                    shutil.move(filepathstr.strip(), outDir)
-        Path('del.txt').unlink()
+        # outputDir = args.outputDir
+        # with open('del.txt') as fp:
+        #     for filepathstr in fp.readlines():
+        #         # import pdb;pdb.set_trace()
+        #         fpname = Path(filepathstr.strip()).stem 
+        #         try:
+        #             # outDir = Path(outputDir) / (Path(filepathstr.strip()).stem + ' Won_' + str(int(self.df.loc[fpname][0])) + Path(filepathstr.strip()).suffix)
+        #             outDir = Path(outputDir) / str(int(self.df.loc[fpname][0])) / Path(filepathstr.strip()).name
+        #             if not outDir.parent.is_dir():
+        #                 outDir.parent.mkdir(parents=True)
+        #             # print(outDir)
+        #         except:
+        #             # print('Some problem')
+        #             continue
+        #         if Path(filepathstr.strip()).is_file():
+        #             shutil.move(filepathstr.strip(), outDir)
+        # Path('del.txt').unlink()
+        pass
         
         
         self.df.to_csv(self.dffilename)
