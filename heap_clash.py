@@ -10,7 +10,6 @@ from random import shuffle
 import random
 import numpy as np
 import re
-import time
 import os
 from notSoRand import main
 import Aftermath
@@ -178,7 +177,7 @@ class HeapLabel(ClickableLabel):
         shutil.move(fp_path,out_file)
         print(f'{out_file.stem} lost to {Path(self.Imagelist[self.currentIndex]).name}' )
         new_contender = Candidate(self.worths[self.currentIndex]//2,str(out_file))
-        parent = Candidate(self.worths[self.currentIndex]//2,self.Imagelist[self.currentIndex])
+        parent = Candidate(self.worths[self.currentIndex],self.Imagelist[self.currentIndex])
         self.im_heap_gen.insert_child_to_parent(parent,new_contender)
         self.reset()
 
@@ -252,23 +251,25 @@ class Ui_MainWindow(object):
         # self.moveFiles('listmidCard.txt.opml',r'C:\Heaven\YummyBaked\midCard',False)
         # self.moveFiles('listmidCard.txt.opml',args.MidCardDir,False)
         # self.moveFiles('listdel.txt.opml',args.DeletablePath,False)
-        # outputDir = args.outputDir
-        # with open('del.txt') as fp:
-        #     for filepathstr in fp.readlines():
-        #         # import pdb;pdb.set_trace()
-        #         fpname = Path(filepathstr.strip()).stem 
-        #         try:
-        #             # outDir = Path(outputDir) / (Path(filepathstr.strip()).stem + ' Won_' + str(int(self.df.loc[fpname][0])) + Path(filepathstr.strip()).suffix)
-        #             outDir = Path(outputDir) / str(int(self.df.loc[fpname][0])) / Path(filepathstr.strip()).name
-        #             if not outDir.parent.is_dir():
-        #                 outDir.parent.mkdir(parents=True)
-        #             # print(outDir)
-        #         except:
-        #             # print('Some problem')
-        #             continue
-        #         if Path(filepathstr.strip()).is_file():
-        #             shutil.move(filepathstr.strip(), outDir)
-        # Path('del.txt').unlink()
+        outputDir = r'D:\paradise\stuff\essence\Pictures\Action'
+        if not Path('dnbh.txt').is_file():
+            return
+        with open('dnbh.txt') as fp:
+            for filepathstr in fp.readlines():
+                # import pdb;pdb.set_trace()
+                fpname = Path(filepathstr.strip()).stem 
+                try:
+                    # outDir = Path(outputDir) / (Path(filepathstr.strip()).stem + ' Won_' + str(int(self.df.loc[fpname][0])) + Path(filepathstr.strip()).suffix)
+                    outDir = Path(outputDir) / str(int(self.df.loc[fpname][0])) / Path(filepathstr.strip()).name
+                    if not outDir.parent.is_dir():
+                        outDir.parent.mkdir(parents=True)
+                    # print(outDir)
+                except:
+                    # print('Some problem')
+                    continue
+                if Path(filepathstr.strip()).is_file():
+                    shutil.move(filepathstr.strip(), outDir)
+        Path('dnbh.txt').unlink()
         pass
         
         
@@ -362,11 +363,10 @@ class Ui_MainWindow(object):
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_1), MainWindow, activated=lambda :self.label.noteItDown('dnbh.txt'))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_2), MainWindow, activated=lambda :self.LeftImage.noteItDown('dnbh.txt'))
         
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_1), MainWindow, activated=lambda :self.label.noteItDown('del.txt'))
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_2), MainWindow, activated=lambda :self.LeftImage.noteItDown('del.txt'))
+        # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_1), MainWindow, activated=lambda :self.label.noteItDown('del.txt'))
+        # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_2), MainWindow, activated=lambda :self.LeftImage.noteItDown('del.txt'))
         
 
-        self.timestamp = time.time()
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)

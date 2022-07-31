@@ -1,4 +1,5 @@
 # Python3 implementation of Max Heap
+from logging import debug
 from random import randint
 import sys
 import pandas as pd
@@ -85,6 +86,7 @@ class MaxHeap:
 		# breakpoint()
 		while (parent.filepath !=
 			self.Heap[self.parent(current)].filepath):
+			print(f'parent: {self.Heap[self.parent(current)].filepath}  current: {self.Heap[current].filepath}')
 			self.swap(current, self.parent(current))
 			current = self.parent(current)
 
