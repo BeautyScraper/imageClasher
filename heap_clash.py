@@ -164,7 +164,11 @@ class ClickableLabel(QtWidgets.QLabel):
 class HeapLabel(ClickableLabel):
     def setList(self, ra = 1):
         self.im_heap_gen = MaxHeap(Path(args.outputDir)/'clash_records.csv')
+
         imgList = [x.filepath for x in self.im_heap_gen.traverse_heap()]
+        if len(imgList) <= 0:
+            breakpoint()
+            # first = Candidate()
         self.worths = [x.key_worth for x in self.im_heap_gen.traverse_heap()]
         super().setList(imgList,ra)
 
@@ -172,8 +176,10 @@ class HeapLabel(ClickableLabel):
         out_dir = Path(args.outputDir)
         out_file = out_dir / Path(fp_path).name
         shutil.move(fp_path,out_file)
-        new_contender = Candidate(self.worths[self.currentIndex]//2,out_file)
-        self.im_heap_gen.insert(new_contender)
+        print(f'{out_file.stem} lost to {Path(self.Imagelist[self.currentIndex]).name}' )
+        new_contender = Candidate(self.worths[self.currentIndex]//2,str(out_file))
+        parent = Candidate(self.worths[self.currentIndex]//2,self.Imagelist[self.currentIndex])
+        self.im_heap_gen.insert_child_to_parent(parent,new_contender)
         self.reset()
 
     def reset(self):
@@ -309,7 +315,7 @@ class Ui_MainWindow(object):
         self.label.resize(int(w/2),h)
         if len(self.listI) == 0:
             return
-        self.label.setList(self.listI[0::2])
+        self.label.setList()
         fullScreenFlag = [False]
         
         def toggleFulScreen():
@@ -428,8 +434,8 @@ class Ui_MainWindow(object):
         print(loserName , 'lost to', winnerName)
         # Winner.bringNextContenderOut()
         # if random.randint(1,100) < 80:
+        Winner.itWon(Loser.getfullpathname())
         Loser.bringNextContenderOut()
-        Winner.itWon()
         # self.horizontalLayout.addStretch(1)
         # self.timestamp = time.time()
 

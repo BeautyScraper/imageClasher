@@ -1,11 +1,9 @@
 # Python3 implementation of Max Heap
-from calendar import c
 from random import randint
 import sys
 import pandas as pd
 from pathlib import Path
 # Python3 implementation of Max Heap
-import sys
 from functools import total_ordering
 
 # def get_index(list_a, index,default_value= Candidate(0,'dump.jpg')):
@@ -57,7 +55,7 @@ class MaxHeap:
 	def csv_to_heap(self):
 		df = pd.read_csv(self.csv_filepath)
 		self.Heap = []
-		for i,_ in enumerate(df['key_woro']):
+		for i,_ in enumerate(df['key_worth']):
 			self.Heap.append(Candidate(df.iloc[i]['key_worth'],df.iloc[i]['filepath'])) 
 			self.size += 1
 		# self.Heap[0] = Candidate(sys.maxsize,'dump.jpg')
@@ -77,6 +75,20 @@ class MaxHeap:
 	# Function to return the position of
 	# parent for the node currently
 	# at pos
+	def insert_child_to_parent(self, parent, child):
+		# breakpoint()
+		self.size += 1
+		self.Heap.append(child) 
+
+		current = self.size 
+
+		# breakpoint()
+		while (parent.filepath !=
+			self.Heap[self.parent(current)].filepath):
+			self.swap(current, self.parent(current))
+			current = self.parent(current)
+
+
 	def parent(self, pos):
 		
 		return pos // 2
@@ -136,10 +148,12 @@ class MaxHeap:
 					self.swap(pos, self.rightChild(pos))
 					self.maxHeapify(self.rightChild(pos))
 	def traverse_heap(self):
-		current = self.size
+		current = len(self.Heap)
 		while (current > 0):
-			yield self.Heap[current]
 			current = self.parent(current)
+			yield self.Heap[current]
+		# if current == 0:
+		# 	yield self.Heap[current]
 
 	# Function to insert a node into the heap
 	def insert(self, element):
@@ -153,7 +167,7 @@ class MaxHeap:
 		current = self.size 
 
 		# breakpoint()
-		while (self.Heap[current] >
+		while (self.Heap[current] >=
 			self.Heap[self.parent(current)]):
 			self.swap(current, self.parent(current))
 			current = self.parent(current)
@@ -191,17 +205,18 @@ if __name__ == "__main__":
 	with MaxHeap('hello.csv') as maxHeap:
 	# with open('hello1.csv','w') as fp:
 		maxHeap.Print()
-		maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
-		maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
-		maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
-		maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
-		maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
-		maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
-		maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
-		maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
-		maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
+		# maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
+		# maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
+		# maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
+		# maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
+		# maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
+		# maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
+		# maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
+		# maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
+		# maxHeap.insert(Candidate(randint(5,100),'XXX.jpg'))
 		# maxHeap.heap_to_csv()
 		# maxHeap.Print()
 		th = maxHeap.traverse_heap()
+		print( [x for x in th])
 		breakpoint()		
 		print("The Max val is " + str(maxHeap.extractMax()))
