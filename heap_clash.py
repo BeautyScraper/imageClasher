@@ -173,6 +173,7 @@ class HeapLabel(ClickableLabel):
 
     def itWon(self,fp_path):
         out_dir = Path(args.outputDir)
+        out_dir.mkdir(exist_ok=True,parents=True)
         out_file = out_dir / Path(fp_path).name
         shutil.move(fp_path,out_file)
         print(f'{out_file.stem} lost to {Path(self.Imagelist[self.currentIndex]).name}' )
