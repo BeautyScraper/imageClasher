@@ -27,11 +27,16 @@ def dir_to_csv():
         shifted_name = str(shifted_name)
         dirs.rename(shifted_name)
 
+def broader_move(level_dir_mapping, csv_file):
+    for level, out_dir in level_dir_mapping:
+        move_level(level,out_dir,csv_file) 
+
+
 def move_file(filePath,out_dir):
     shutil.move(filePath,out_dir)
 
 def move_level(level, out_dir, csv_file):
-    csv_file = csfv_file_path
+    # csv_file = csfv_file_path
     df = pd.read_csv(csv_file)
     start_index = 2**level - 1
     end_index = 2**(level+1) - 2
@@ -40,10 +45,8 @@ def move_level(level, out_dir, csv_file):
     df.drop(df.iloc[start_index:end_index,:])
     Path(csv_file).unlink()
     df.to_csv(csv_file,index=False)
-
-
-
  
 if __name__ == '__main__':
-    csv_to_dir()
+    nf = [(1,r'Champions'),(6,r'Midcard'),(11,r'delete')]
+    broader_move(nf,csfv_file_path)
     
