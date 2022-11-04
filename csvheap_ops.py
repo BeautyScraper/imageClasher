@@ -31,7 +31,6 @@ def broader_move(level_dir_mapping, csv_file):
     for level, out_dir in level_dir_mapping:
         move_level(level,out_dir,csv_file) 
 
-
 def move_file(filePath,out_dir):
     shutil.move(filePath,out_dir)
 
@@ -45,8 +44,14 @@ def move_level(level, out_dir, csv_file):
     df.drop(df.iloc[start_index:end_index,:])
     Path(csv_file).unlink()
     df.to_csv(csv_file,index=False)
- 
-if __name__ == '__main__':
+
+def main():
+    df = pd.read_csv(csfv_file_path)
+    if math.floor(math.log(df.shape[0],2)) < 10:
+        return
     nf = [(1,r'Champions'),(6,r'Midcard'),(11,r'delete')]
     broader_move(nf,csfv_file_path)
+
+if __name__ == '__main__':
+    main()
     
