@@ -47,9 +47,9 @@ def move_level(level, out_dir, csv_file):
 
 def main():
     df = pd.read_csv(csfv_file_path)
-    if math.floor(math.log(df.shape[0],2)) < 10:
+    if math.floor(math.log(df.shape[0],2)) < 11:
         return
-    nf = [(1,r'Champions'),(6,r'Midcard'),(11,r'delete')]
+    nf = [(10,r'delete'),(1,r'Champions'),(6,r'Midcard')]
     broader_move(nf,csfv_file_path)
 
 if __name__ == '__main__':
