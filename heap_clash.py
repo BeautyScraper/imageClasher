@@ -296,7 +296,8 @@ class Ui_MainWindow(object):
         self.losersTime = args.time
         ClickableLabel.timeToWin = self.losersTime * 1000
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, w, h))
-
+        self.timer=QTimer()
+        self.timer.timeout.connect(self.DoMoves)
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -386,12 +387,13 @@ class Ui_MainWindow(object):
         shuffle(wrestler)
         moveStr = '%s %sed %s' % (wrestler[0],random.choice(fc).strip(),wrestler[1])
         i = 1
-        while random.randint(0,5) > 2:
+        if random.randint(0,5) > 2:
             moveStr += ' but %s countered with %s' % (wrestler[i%2],random.choice(fc).strip())
             i += 1
-        print(moveStr)
+        # print(moveStr)
         self.statusbar.showMessage(moveStr)
         self.textlabel.setText(moveStr)
+        self.timer.start(5000)
         
     def AssignRole(self):
         
@@ -402,9 +404,10 @@ class Ui_MainWindow(object):
     
     def statusbarManipulation(self):
         rng = 3 > random.randint(0,15)
-        if rng and False:
-           self.DoMoves()
+        if rng:
+            self.DoMoves()
         else:
+            self.timer.stop()
             self.AssignRole()
     
     def arraowEvent(self,WinningSide):
