@@ -381,7 +381,8 @@ class Ui_MainWindow(object):
 
     
     def DoMoves(self):
-        with open('moves.txt','r') as fp:
+        movefppath = Path(r'D:\Developed\Automation\imageClasher\lunchers\files\MoveName.txt')
+        with open(movefppath,'r') as fp:
             fc = fp.readlines()
         wrestler = ['LeftOne', 'RightOne']
         shuffle(wrestler)
@@ -393,7 +394,7 @@ class Ui_MainWindow(object):
         # print(moveStr)
         self.statusbar.showMessage(moveStr)
         self.textlabel.setText(moveStr)
-        self.timer.start(5000)
+        self.timer.start(1000 * len(moveStr))
         
     def AssignRole(self):
         
