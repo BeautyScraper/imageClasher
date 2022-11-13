@@ -164,28 +164,70 @@ class HeapLabel(ClickableLabel):
     def setList(self, ra = 1):
         self.im_heap_gen = MaxHeap(Path(args.outputDir)/'clash_records.csv')
 
-        imgList = [x.filepath for x in self.im_heap_gen.traverse_heap()]
-        if len(imgList) <= 0:
-            breakpoint()
+        self.imgListGen = self.im_heap_gen.traverse_heap()
+        # if len(self.imgListGen) <= 0:
+        #     breakpoint()
             # first = Candidate()
-        self.worths = [x.key_worth for x in self.im_heap_gen.traverse_heap()]
-        super().setList(imgList,ra)
+        self.worths = 5000
+        # super().setList(imgList,ra)
+        self.rightOne = ra
+        self.Imagelist = next(self.imgListGen).filepath
+        self.currentIndex = 0
+        self.redhotmap = QtGui.QPixmap(self.Imagelist)
+        self.redhotmap = self.redhotmap.scaled(self.geometry().width(),self.geometry().height(),1,1)
+        self.setPixmap(self.redhotmap)
+        self.w = self.geometry().width()
+        self.h = self.geometry().height()
+
+    def getCurrentcontenderName(self):
+        try :
+            p = Path(self.Imagelist).stem
+        except:
+            self.setStyleSheet("QLabel"
+                            "{"
+                            "background-color : red;"
+                            "}")
+            p = Path(self.Imagelist[-1]).stem
+            
+        return p
+
+
+    def bringNextContenderOut(self):
+        # self.currentIndex += 1
+        self.Imagelist = next(self.imgListGen).filepath
+        try:
+            self.redhotmap = QtGui.QPixmap(self.Imagelist)
+        except:
+            self.redhotmap = QtGui.QPixmap(self.Imagelist)
+            self.im_heap_gen.heap_to_csv()
+            # self.currentIndex -= 1
+            
+        self.redhotmap = self.redhotmap.scaled(self.w, self.h, 1, 1)
+        self.setPixmap(self.redhotmap)
+        self.resize(self.redhotmap.width(),self.redhotmap.height())
+        self.setAlignment(QtCore.Qt.AlignTop)
+        self.setStyleSheet("background-color: black") 
+        # self.timer.start(ClickableLabel.timeToWin)
+
+
 
     def itWon(self,fp_path):
         out_dir = Path(args.outputDir)
         out_dir.mkdir(exist_ok=True,parents=True)
         out_file = out_dir / Path(fp_path).name
         shutil.move(fp_path,out_file)
-        print(f'{out_file.stem} lost to {Path(self.Imagelist[self.currentIndex]).name}' )
-        new_contender = Candidate(self.worths[self.currentIndex]//2,str(out_file))
-        parent = Candidate(self.worths[self.currentIndex],self.Imagelist[self.currentIndex])
+        print(f'{out_file.stem} lost to {Path(self.Imagelist).name}' )
+        new_contender = Candidate(2000,str(out_file))
+        parent = Candidate(2000,self.Imagelist)
         self.im_heap_gen.insert_child_to_parent(parent,new_contender)
         self.reset()
 
     def reset(self):
-        self.Imagelist = [x.filepath for x in self.im_heap_gen.traverse_heap()]
-        self.worths = [x.key_worth for x in self.im_heap_gen.traverse_heap()]
-        self.im_heap_gen.heap_to_csv()
+        self.imgListGen = self.im_heap_gen.traverse_heap()
+        # self.Imagelist =  next(self.imgListGen).filepath
+        # self.worths = next(self.imgListGen).key_worth
+        # self.worths = [x.key_worth for x in self.im_heap_gen.traverse_heap()]
+        # self.im_heap_gen.heap_to_csv()
         self.currentIndex = -1
         self.bringNextContenderOut()
         # self.timer.start(ClickableLabel.timeToWin)
@@ -252,6 +294,8 @@ class Ui_MainWindow(object):
         # self.moveFiles('listmidCard.txt.opml',r'C:\Heaven\YummyBaked\midCard',False)
         # self.moveFiles('listmidCard.txt.opml',args.MidCardDir,False)
         # self.moveFiles('listdel.txt.opml',args.DeletablePath,False)
+        self.label.im_heap_gen.heap_to_csv()
+        print('Closing heap')
         outputDir = r'D:\paradise\stuff\essence\Pictures\Action'
         if not Path('dnbh.txt').is_file():
             return
@@ -394,7 +438,7 @@ class Ui_MainWindow(object):
         # print(moveStr)
         self.statusbar.showMessage(moveStr)
         self.textlabel.setText(moveStr)
-        self.timer.start(1000 * len(moveStr))
+        self.timer.start(200 * len(moveStr))
         
     def AssignRole(self):
         
@@ -427,7 +471,7 @@ class Ui_MainWindow(object):
         # Winner.itWon(Loser.getWinningCount())
         # deliberationTime = time.time() - self.timestamp
         # print(Winner.getWinningCount(), ' winnin', loserName)
-        Loser.noteItDown('del.txt')
+        # Loser.noteItDown('del.txt')
         # if deliberationTime < self.losersTime and Loser.getWinningCount() <= 0:
             # Loser.noteItDown('del.txt')
         # else:

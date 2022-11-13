@@ -32,8 +32,13 @@ def broader_move(level_dir_mapping, csv_file):
         move_level(level,out_dir,csv_file) 
 
 def move_file(filePath,out_dir):
+    outfile = Path(out_dir) / Path(filePath).name
+    if outfile.is_file():
+        outfile.unlink()
     if Path(filePath).is_file():
         shutil.move(filePath,out_dir)
+
+
 
 def move_level(level, out_dir, csv_file):
     # csv_file = csfv_file_path
@@ -42,7 +47,7 @@ def move_level(level, out_dir, csv_file):
     end_index = 2**(level+1) - 1
     nf = lambda x:move_file(x, out_dir)
     df.iloc[start_index:end_index,1].apply(nf)
-    breakpoint()
+    # breakpoint()
     # df.drop(df.iloc[start_index:end_index,:])
     df = df.drop(labels=range(start_index,end_index+1), axis=0)
     Path(csv_file).unlink()
