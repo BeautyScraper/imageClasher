@@ -135,7 +135,8 @@ class ClickableLabel(QtWidgets.QLabel):
         for fl in file_list: 
             with open(fl,'r') as fp:
                 for lines in fp.readline():
-                    if re.search(pattern,lines):
+                    # if re.search(pattern,lines):
+                    if pattern in lines:
                         fl_valid.append(fl)
                         break
         return fl_valid
@@ -143,10 +144,12 @@ class ClickableLabel(QtWidgets.QLabel):
 
     def skipNextnContender(self,pattern):
         list_of_files_to_write_in = self.search_inlastline(pattern)
-        while re.search(pattern,self.getCurrentcontenderName):
+        # while re.search(pattern,self.getCurrentcontenderName):
+        while not pattern in self.getCurrentcontenderName:
             for fps in list_of_files_to_write_in:
                 self.noteItDown(fps)
             self.currentIndex += 1
+        self.currentIndex -= 1
         self.bringNextContenderOut()
 
     def itWon(self,by=0):
@@ -395,6 +398,7 @@ class Ui_MainWindow(object):
         b1.clicked.connect(self.arraowEvent)
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left),MainWindow, activated=self.arraowEvent)
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right), MainWindow, activated=self.previousall)
+        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_X), MainWindow, activated=self.skip_ahead)
         # self.horizontalLayout.addWidget(self.textlabel)
         MainWindow.setCentralWidget(self.centralwidget)
         self.horizontalLayout.setAlignment(QtCore.Qt.AlignTop)
@@ -467,8 +471,9 @@ class Ui_MainWindow(object):
     
     def skip_ahead(self):
         for cell in self.cells:
+            skip_p = cell.getCurrentcontenderName()
             #get pattern
-            cell.skipNextnContender(skip_P)
+            cell.skipNextnContender(skip_p)
 
 
     def arraowEvent(self):
