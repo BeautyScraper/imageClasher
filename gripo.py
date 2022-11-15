@@ -152,7 +152,7 @@ class ClickableLabel(QtWidgets.QLabel):
         while pattern in self.getCurrentcontenderName():
             for fps in list_of_files_to_write_in:
                 self.noteItDown(fps)
-            self.noteItDown('del.txt')
+            self.noteItDown('default.txt')
             self.currentIndex += 1
         self.currentIndex -= 1
         self.bringNextContenderOut()
