@@ -430,15 +430,28 @@ class Ui_MainWindow(object):
             fc = fp.readlines()
         wrestler = ['LeftOne', 'RightOne']
         shuffle(wrestler)
+
         moveStr = '%s %sed %s' % (wrestler[0],random.choice(fc).strip(),wrestler[1])
         i = 1
-        if random.randint(0,5) > 2:
+        counter = random.randint(0,5) > 2
+        if counter:
             moveStr += ' but %s countered with %s' % (wrestler[i%2],random.choice(fc).strip())
             i += 1
+        pinned = random.randint(0,10) < 2
+        if pinned and not counter:
+            moveStr += 'and %s pinneded %s' % (wrestler[0],wrestler[1])
+            self.timer.stop()
+            
+        if pinned and counter:
+            moveStr += 'and %s pinneded %s' % (wrestler[i%2],wrestler[(i+1)%2])
+            self.timer.stop()
+            
+        
         # print(moveStr)
         self.statusbar.showMessage(moveStr)
         self.textlabel.setText(moveStr)
-        self.timer.start(200 * len(moveStr))
+        if not pinned:
+            self.timer.start(200 * len(moveStr))
         
     def AssignRole(self):
         
