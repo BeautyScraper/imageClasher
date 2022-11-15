@@ -129,7 +129,26 @@ class ClickableLabel(QtWidgets.QLabel):
         # self.timer.stop()
         self.setStyleSheet("background-color: black") 
         # self.timer.start(ClickableLabel.timeToWin)
-    
+    def search_inlastline(self,pattern):
+        file_list = ['l.txt', 'r.txt']
+        fl_valid = []
+        for fl in file_list: 
+            with open(fl,'r') as fp:
+                for lines in fp.readline():
+                    if re.search(pattern,lines):
+                        fl_valid.append(fl)
+                        break
+        return fl_valid
+
+
+    def skipNextnContender(self,pattern):
+        list_of_files_to_write_in = self.search_inlastline(pattern)
+        while re.search(pattern,self.getCurrentcontenderName):
+            for fps in list_of_files_to_write_in:
+                self.noteItDown(fps)
+            self.currentIndex += 1
+        self.bringNextContenderOut()
+
     def itWon(self,by=0):
         self.timer.stop()
         self.winningCount += 1 + by
@@ -446,8 +465,13 @@ class Ui_MainWindow(object):
         self.scannedFiles -= self.picInWin - 1 
         self.statusbar.showMessage(str(self.scannedFiles) + '/'+ str(len(self.listI)) )
     
+    def skip_ahead(self):
+        for cell in self.cells:
+            #get pattern
+            cell.skipNextnContender(skip_P)
+
+
     def arraowEvent(self):
-        
         # print('its executinh')
         for cell in self.cells:
             cell.noteItDown(self.defaultaction.notedownfile)
