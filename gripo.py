@@ -133,9 +133,12 @@ class ClickableLabel(QtWidgets.QLabel):
         file_list = ['l.txt', 'r.txt']
         fl_valid = []
         for fl in file_list: 
+            if not Path(fl).is_file():
+                continue
             with open(fl,'r') as fp:
-                for lines in fp.readline():
+                for lines in fp.readlines():
                     # if re.search(pattern,lines):
+                    # print(f'{pattern} is in {lines}')
                     if pattern in lines:
                         fl_valid.append(fl)
                         break
@@ -145,9 +148,11 @@ class ClickableLabel(QtWidgets.QLabel):
     def skipNextnContender(self,pattern):
         list_of_files_to_write_in = self.search_inlastline(pattern)
         # while re.search(pattern,self.getCurrentcontenderName):
-        while not pattern in self.getCurrentcontenderName:
+        # print(list_of_files_to_write_in)
+        while pattern in self.getCurrentcontenderName():
             for fps in list_of_files_to_write_in:
                 self.noteItDown(fps)
+            self.noteItDown('del.txt')
             self.currentIndex += 1
         self.currentIndex -= 1
         self.bringNextContenderOut()
@@ -473,6 +478,9 @@ class Ui_MainWindow(object):
         for cell in self.cells:
             skip_p = cell.getCurrentcontenderName()
             #get pattern
+            skip_p = skip_p.split('-Scene-')[0] + '-Scene-'
+            # print('LLLLLLLLLLLL')
+            # print(skip_p)
             cell.skipNextnContender(skip_p)
 
 
