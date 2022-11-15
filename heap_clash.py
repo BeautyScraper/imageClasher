@@ -428,7 +428,7 @@ class Ui_MainWindow(object):
         movefppath = Path(r'D:\Developed\Automation\imageClasher\lunchers\files\MoveName.txt')
         with open(movefppath,'r') as fp:
             fc = fp.readlines()
-        wrestler = ['LeftOne \u1F814', 'RightOne \U1F812']#https://unicode-table.com/en/sets/arrow-symbols/#right-arrows
+        wrestler = ['LeftOne \U00002B05', 'RightOne \U000027A1']#https://unicode-table.com/en/sets/arrow-symbols/#right-arrows
         shuffle(wrestler)
 
         moveStr = '%s %sed %s' % (wrestler[0],random.choice(fc).strip(),wrestler[1])
