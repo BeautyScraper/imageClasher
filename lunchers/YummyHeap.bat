@@ -1,2 +1,2 @@
-python "D:\Developed\Automation\imageClasher\heap_clash.py" --inputDir "D:\paradise\stuff\essence\FS\SachMe" --outputDir "D:\paradise\stuff\essence\Pictures\YummyHeap" --time 30
+python "D:\Developed\Automation\imageClasher\heap_clash.py" --inputDir "D:\paradise\stuff\essence\FS\SachMe" --outputDir "D:\paradise\stuff\essence\FS\images\yummyheap" --time 30
 REM do percentage based, order by rank so squash matches happen often

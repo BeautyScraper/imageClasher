@@ -98,9 +98,16 @@ class ClickableLabel(QtWidgets.QLabel):
     def noteItDownre(self,fileName,repattern='',subpattern='',srclistFile=r'D:\Developed\Automation\fnr\TargetDirs.opml'):
         tk = self.Imagelist[self.currentIndex]
         # print(tk)
-        dirName = re.search('(.*) @hudengi (.*) W1t81N (.*)',str(tk))[2]
-        filename = re.search('(.*) @hudengi (.*) W1t81N (.*)',str(tk))[3]
+        try:
+            dirName = re.search('(.*) @hudengi (.*) W1t81N (.*)',str(tk))[2]
+            filename = re.search('(.*) @hudengi (.*) W1t81N (.*)',str(tk))[3]
+        except:
+            return
+        if re.sub('_\d+\.','.',filename) is not None:
+            filename = re.sub('_\d+\.','.',filename)        
         srcPath = self.getThisFile(filename,dirName)
+        if srcPath is None:
+            return
         with open(str(fileName), 'a+') as fp:
             fp.write(str(srcPath) + '\n')
         
@@ -445,9 +452,17 @@ class Ui_MainWindow(object):
     def openSrcFileIrfanview(self,fileName):
         tk = self.label.Imagelist[self.label.currentIndex]
         # print(tk)
-        dirName = re.search('(.*) @hudengi (.*) W1t81N (.*)',str(tk))[2]
-        filename = re.search('(.*) @hudengi (.*) W1t81N (.*)',str(tk))[3]
+        try:
+            dirName = re.search('(.*) @hudengi (.*) W1t81N (.*)',str(tk))[2]
+            # breakpoint()
+            filename = re.search('(.*) @hudengi (.*) W1t81N (.*)',str(tk))[3]
+        except:
+            return
+        if re.sub('_\d+\.','.',filename) is not None:
+            filename = re.sub('_\d+\.','.',filename)
         srcPath = self.label.getThisFile(filename,dirName)
+        if srcPath is None:
+            return
         template = 'start "C:\Program Files (x86)\IrfanView\i_view32.exe\" "%s"' %  str(srcPath)
         os.system(template)
     
