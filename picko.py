@@ -456,7 +456,8 @@ class Ui_MainWindow(object):
             dirName = re.search('(.*) @hudengi (.*) W1t81N (.*)',str(tk))[2]
             # breakpoint()
             filename = re.search('(.*) @hudengi (.*) W1t81N (.*)',str(tk))[3]
-        except:
+        except Exception as e:
+            print(e)
             return
         if re.sub('_\d+\.','.',filename) is not None:
             filename = re.sub('_\d+\.','.',filename)
