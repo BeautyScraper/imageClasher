@@ -47,10 +47,10 @@ args = parser.parse_args()
 
 def openInBrowser(fileName):
     import webbrowser
-    template = 'https://www.instagram.com/p/@@/'
+    template = 'https://www.picnob.com/post/@@/'
 
     try: 
-        postId = re.search('\((.*?)\)',fileName).group(1)
+        postId = re.search('\((\d{3,}?)\)', fileName)[0].strip('()')
     except:
         print('Not a correctly Formated File')
         return
@@ -287,7 +287,7 @@ class Ui_MainWindow(object):
         for tb in self.actions:
             if tb.actiontype == 'corr_move': 
                 # print(tb.targetDir)
-                self.movecorrFiles(tb.notedownfile,tb.targetDir,False,'force_copy')
+                self.movecorrFiles(tb.notedownfile,tb.targetDir,False,'move')
                 continue
             self.moveFiles(tb.notedownfile,tb.targetDir,False,'force_copy')
         # breakpoint()
