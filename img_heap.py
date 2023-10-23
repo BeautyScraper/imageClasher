@@ -171,8 +171,11 @@ class MaxHeap:
 		# breakpoint()
 		while (self.Heap[current] >=
 			self.Heap[self.parent(current)]):
+			
 			self.swap(current, self.parent(current))
 			current = self.parent(current)
+			if current == 0:
+				return
 		# breakpoint()
 
 	# Function to print the contents of the heap
