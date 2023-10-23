@@ -27,7 +27,9 @@ def moveByFastCopy(txtFileName,dstination,action='move'):
     cmd = cmd.replace('%1',txtFileName)
     cmd = cmd.replace('%2',dstination)
     cmd = cmd.replace('%3',action)
-    print(cmd)
+    # fp = open('gh.txt', 'a+')
+    # print(cmd, file=fp)
+    # fp.close()
     # import pdb;pdb.set_trace()
     os.system(cmd)
         
