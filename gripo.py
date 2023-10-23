@@ -147,8 +147,6 @@ class ClickableLabel(QtWidgets.QLabel):
 
     def skipNextnContender(self,pattern):
         list_of_files_to_write_in = self.search_inlastline(pattern)
-        # while re.search(pattern,self.getCurrentcontenderName):
-        # print(list_of_files_to_write_in)
         while pattern in self.getCurrentcontenderName():
             for fps in list_of_files_to_write_in:
                 self.noteItDown(fps)
@@ -475,13 +473,14 @@ class Ui_MainWindow(object):
         self.statusbar.showMessage(str(self.scannedFiles) + '/'+ str(len(self.listI)) )
     
     def skip_ahead(self):
+        patterns = []
         for cell in self.cells:
             skip_p = cell.getCurrentcontenderName()
-            #get pattern
             skip_p = skip_p.split('-Scene-')[0] + '-Scene-'
-            # print('LLLLLLLLLLLL')
-            # print(skip_p)
-            cell.skipNextnContender(skip_p)
+            patterns.append(skip_p)
+        for cell in self.cells:
+            for pp in patterns:
+                cell.skipNextnContender(pp)
 
 
     def arraowEvent(self):
