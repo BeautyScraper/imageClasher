@@ -88,6 +88,8 @@ class MaxHeap:
 			self.Heap[self.parent(current)].filepath):
 			print(f'parent: {self.Heap[self.parent(current)].filepath}  current: {self.Heap[current].filepath}')
 			self.swap(current, self.parent(current))
+			if current == self.parent(current):
+				break
 			current = self.parent(current)
 
 
@@ -151,9 +153,13 @@ class MaxHeap:
 					self.maxHeapify(self.rightChild(pos))
 	def traverse_heap(self):
 		current = len(self.Heap)
-		while (current > 0):
+		while (current >= 0):
+			print(f"Traversing {current=}")
 			current = self.parent(current)
 			yield self.Heap[current]
+		# yield self.Heap[0]
+		print(f"out of while {current=}")
+
 		# if current == 0:
 		# 	yield self.Heap[current]
 

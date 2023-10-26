@@ -44,9 +44,14 @@ parser.set_defaults(rand=False)
 args = parser.parse_args()
 
 def run_clash(sdir):
+    if type(sdir) == bool:
+        print('wrong type')
+        return 
     print(f'running the clash {sdir}')
     heap_dir = Path(sdir).parent / f'heap_{Path(sdir).name}'
-    template_cmd = f'python heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)}  --time 30'
+    heap_dir.mkdir(exist_ok=True,parents=False)
+    template_cmd = f'python D:\Developed\Automation\imageClasher\heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)}  --time 30'
+    print(template_cmd)
     os.system(template_cmd)
 
 
@@ -391,8 +396,8 @@ class Ui_MainWindow(object):
         for acts in self.actions:
             new_action = QtWidgets.QAction("Run Clash of" + acts.targetDir.strip('\\').split('\\')[-1], MainWindow)
             file_menu.addAction(new_action)
-
-            new_action.triggered.connect(lambda: run_clash(acts.targetDir))
+            rt = lambda _,x11=acts.targetDir: run_clash(x11)
+            new_action.triggered.connect(rt)
 
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.arraowEvent())
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.skipEvent(10))
