@@ -45,6 +45,10 @@ args = parser.parse_args()
 
 def run_clash(sdir):
     print(f'running the clash {sdir}')
+    heap_dir = Path(sdir).parent / f'heap_{Path(sdir).name}'
+    template_cmd = f'python heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)}  --time 30'
+    os.system(template_cmd)
+
 
 def openInBrowser(fileName):
     import webbrowser
