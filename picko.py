@@ -43,7 +43,8 @@ parser.set_defaults(rand=False)
 
 args = parser.parse_args()
 
-
+def run_clash(sdir):
+    print(f'running the clash {sdir}')
 
 def openInBrowser(fileName):
     import webbrowser
@@ -377,7 +378,16 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        
+
+        menubar = MainWindow.menuBar()
+        menubar.setVisible(False)
+        file_menu = menubar.addMenu("Options")
+        for acts in self.actions:
+            new_action = QtWidgets.QAction("Run Clash " + acts.targetDir.strip('\\').split('\\')[-1], MainWindow)
+            file_menu.addAction(new_action)
+
+            new_action.triggered.connect(lambda: run_clash(acts.targetDir))
+
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.arraowEvent())
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.skipEvent(10))
         # QtWidgets.QShortcut(QtGui.QKeySequence('Down'), MainWindow, activated=lambda :self.arraowEvent())
