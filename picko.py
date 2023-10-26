@@ -386,6 +386,8 @@ class Ui_MainWindow(object):
         menubar = MainWindow.menuBar()
         menubar.setVisible(False)
         file_menu = menubar.addMenu("Options")
+        toggle_menu_bar_shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("F11"), window)
+        toggle_menu_bar_shortcut.activated.connect(lambda : menubar.setVisible(not menubar.isVisible()))
         for acts in self.actions:
             new_action = QtWidgets.QAction("Run Clash " + acts.targetDir.strip('\\').split('\\')[-1], MainWindow)
             file_menu.addAction(new_action)
