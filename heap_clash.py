@@ -17,6 +17,8 @@ from MyUtility import moveByFastCopy
 import argparse
 import shutil
 
+from csvheap_ops import main as rain
+
 def dir_path(string):
     if os.path.isdir(string):
         return string
@@ -317,7 +319,7 @@ class Ui_MainWindow(object):
         Path('dnbh.txt').unlink()
         pass
         
-        
+        rain(args.outputDir)
         self.df.to_csv(self.dffilename)
         
     def setupUi(self, MainWindow):

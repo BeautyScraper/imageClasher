@@ -3,10 +3,9 @@ import shutil
 from pathlib import Path
 import math
 
-out_dir = r'D:\paradise\stuff\essence\Pictures\heap\heap_dir'
-csfv_file_path = r'D:\paradise\stuff\essence\Pictures\heap\clash_records.csv'
 
-def csv_to_dir():
+
+def csv_to_dir(csfv_file_path,out_dir):
     df = pd.read_csv(csfv_file_path)
     for i,file_path in enumerate(df['filepath'][1:]):
         file_name = Path(file_path).name
@@ -16,7 +15,7 @@ def csv_to_dir():
         out_dir_level.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(file_path, out_dir_level)
         
-def dir_to_csv():
+def dir_to_csv(csfv_file_path,out_dir):
     df = pd.read_csv(csfv_file_path)
     lev_dirs = [x for x in Path(out_dir).iterdir() if x.is_dir()] 
     lev_dirs_name = [x.name for x in Path(out_dir).iterdir() if x.is_dir()] 
@@ -27,9 +26,11 @@ def dir_to_csv():
         shifted_name = str(shifted_name)
         dirs.rename(shifted_name)
 
-def broader_move(level_dir_mapping, csv_file):
-    for level, out_dir in level_dir_mapping:
-        move_level(level,out_dir,csv_file) 
+def broader_move(level_dir_mapping, csv_file, out_dir_p):
+    ld = Path(out_dir_p)
+    for level in level_dir_mapping:
+            
+        move_level(level,str(ld/str(level)),csv_file) 
 
 def move_file(filePath,out_dir):
     outfile = Path(out_dir) / Path(filePath).name
@@ -53,13 +54,15 @@ def move_level(level, out_dir, csv_file):
     Path(csv_file).unlink()
     df.to_csv(csv_file,index=False)
 
-def main():
+def main(out_dir):
+    
+    csfv_file_path = str(Path(out_dir)/ 'clash_records.csv')
     df = pd.read_csv(csfv_file_path)
     if math.floor(math.log(df.shape[0],2)) < 11:
         return
     
-    nf = [(10,r'C:\temp\losers'),(1,r'D:\paradise\stuff\essence\Pictures\HeapOfHoors\champions'),(6,r'D:\paradise\stuff\essence\Pictures\HeapOfHoors\midcard')]
-    broader_move(nf,csfv_file_path)
+    nf = [10,1,6]
+    broader_move(nf, csfv_file_path, out_dir)
 
 if __name__ == '__main__':
     main()
