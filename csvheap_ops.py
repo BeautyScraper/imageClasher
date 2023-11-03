@@ -43,6 +43,7 @@ def move_file(filePath,out_dir):
 
 def move_level(level, out_dir, csv_file):
     # csv_file = csfv_file_path
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(csv_file)
     start_index = 2**level - 1
     end_index = 2**(level+1) - 1
@@ -55,13 +56,14 @@ def move_level(level, out_dir, csv_file):
     df.to_csv(csv_file,index=False)
 
 def main(out_dir):
-    
+    rt = 9
     csfv_file_path = str(Path(out_dir)/ 'clash_records.csv')
     df = pd.read_csv(csfv_file_path)
-    if math.floor(math.log(df.shape[0],2)) < 11:
+    print(f'count {df.shape[0]=}')
+    if math.floor(math.log(df.shape[0],2)) < rt:
         return
-    
-    nf = [10,1,6]
+    print('segregating')
+    nf = [rt-1,1,6]
     broader_move(nf, csfv_file_path, out_dir)
 
 if __name__ == '__main__':

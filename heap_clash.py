@@ -189,7 +189,8 @@ class HeapLabel(ClickableLabel):
                             "{"
                             "background-color : red;"
                             "}")
-            p = Path(self.Imagelist[-1]).stem
+            print('xdf566 error lies here')
+            # p = Path(self.Imagelist[-1]).stem
             
         return p
 
@@ -299,6 +300,7 @@ class Ui_MainWindow(object):
         self.label.im_heap_gen.heap_to_csv()
         print('Closing heap')
         outputDir = r'D:\paradise\stuff\essence\Pictures\Action'
+        rain(args.outputDir)
         if not Path('dnbh.txt').is_file():
             return
         with open('dnbh.txt') as fp:
@@ -319,7 +321,6 @@ class Ui_MainWindow(object):
         Path('dnbh.txt').unlink()
         pass
         
-        rain(args.outputDir)
         self.df.to_csv(self.dffilename)
         
     def setupUi(self, MainWindow):
@@ -450,7 +451,7 @@ class Ui_MainWindow(object):
             
         
         # print(moveStr)
-        self.statusbar.showMessage(moveStr)
+        # self.statusbar.showMessage(moveStr)
         self.textlabel.setText(moveStr)
         if not pinned:
             self.timer.start(200 * len(moveStr))
@@ -458,8 +459,7 @@ class Ui_MainWindow(object):
     def AssignRole(self):
         
         moveStr = main()
-        print(moveStr)
-        self.statusbar.showMessage(moveStr)
+        # print(moveStr)
         self.textlabel.setText(moveStr)
     
     def statusbarManipulation(self):
@@ -476,6 +476,7 @@ class Ui_MainWindow(object):
         self.statusbarManipulation()
         Winner = self.label
         Loser = self.LeftImage
+        self.statusbar.showMessage(f'{Winner.im_heap_gen.size} out of {str(512)}')
         if WinningSide == 0:
             Winner = self.LeftImage
             Loser = self.label

@@ -390,7 +390,7 @@ class Ui_MainWindow(object):
 
         menubar = MainWindow.menuBar()
         menubar.setVisible(False)
-        file_menu = menubar.addMenu("Options")
+        file_menu = menubar.addMenu("&Options")
         toggle_menu_bar_shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("F11"), MainWindow)
         toggle_menu_bar_shortcut.activated.connect(lambda : menubar.setVisible(not menubar.isVisible()))
         for acts in self.actions:
@@ -504,7 +504,7 @@ class Ui_MainWindow(object):
     def AssignRole(self):
         
         moveStr = main()
-        print(moveStr)
+        # print(moveStr)
         self.statusbar.showMessage(moveStr)
     
     def statusbarManipulation(self):
