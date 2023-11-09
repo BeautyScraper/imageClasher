@@ -16,6 +16,8 @@ from notSoRand import main
 import Aftermath
 from MyUtility import moveByFastCopy
 import argparse
+import hashlib
+
 
 def dir_path(string):
     if os.path.isdir(string):
@@ -81,7 +83,9 @@ def csvReadFile(df,dffilename,listOfName):
 class action:
     def __init__(self,keys,targetDir,actiontype='move'):
         self.keys = keys
-        self.notedownfile = str(hash(targetDir))+ '.txt'
+        m = hashlib.md5()
+        m.update(str(targetDir).encode())
+        self.notedownfile = str(m.hexdigest())+ '.txt'
         self.targetDir = targetDir
         self.actiontype = actiontype
         
