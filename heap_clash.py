@@ -266,6 +266,7 @@ class Ui_MainWindow(object):
 
         
     def afterMath(self):
+        print(f'xcc {self.path=}')
         Aftermath.main(Path(self.path))
     def openTargetDir(self):
         os.system('start "" "%s"' % args.outputDir)
@@ -458,7 +459,7 @@ class Ui_MainWindow(object):
         
     def AssignRole(self):
         
-        moveStr = main()
+        moveStr = main(str(Path(args.inputDir) / 'files'))
         # print(moveStr)
         self.textlabel.setText(moveStr)
     

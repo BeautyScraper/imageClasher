@@ -6,7 +6,7 @@ import sys
 
 import shutil
 import pandas as pd
-from random import shuffle
+from random import randint, shuffle
 import random
 import numpy as np
 import re
@@ -52,7 +52,10 @@ def run_clash(sdir):
     print(f'running the clash {sdir}')
     heap_dir = Path(sdir).parent / f'heap_{Path(sdir).name}'
     heap_dir.mkdir(exist_ok=True,parents=False)
-    template_cmd = f'python D:\Developed\Automation\imageClasher\heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)}  --time 30'
+    cmds = [] 
+    cmds.append(f'python D:\Developed\Automation\imageClasher\heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)} --rand --time 30')
+    cmds.append(f'python D:\Developed\Automation\imageClasher\heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)}  --order rand --time 30')
+    template_cmd = random.choice(cmds)
     print(template_cmd)
     os.system(template_cmd)
 
