@@ -2,6 +2,7 @@ import pandas as pd
 import shutil
 from pathlib import Path
 import math
+import random
 
 
 
@@ -40,6 +41,30 @@ def move_file(filePath,out_dir):
         shutil.move(filePath,out_dir)
 
 
+def sort_heap_level(df, level, by='key_worth', ascending=True):
+    """
+    Sorts the given heap level in the dataframe by random or key_worth.
+
+    Parameters:
+    df (pd.DataFrame): The dataframe containing the heap.
+    level (int): The heap level to sort.
+    by (str): The mode to sort by - 'random' or a column name such as 'key_worth'.
+    ascending (bool): Ascending order if True, descending if False.
+
+    Returns:
+    pd.DataFrame: A dataframe with the specified heap level sorted.
+    """
+    start_index = 2**level - 1
+    end_index = 2**(level + 1) - 1
+    level_df = df.iloc[start_index:end_index]
+
+    if by == 'random':
+        level_df = level_df.sample(frac=1).reset_index(drop=True)
+    else:
+        level_df = level_df.sort_values(by=by, ascending=ascending).reset_index(drop=True)
+    
+    df.iloc[start_index:end_index] = level_df
+    return df
 
 def move_level(level, out_dir, csv_file):
     # csv_file = csfv_file_path
@@ -63,8 +88,12 @@ def main(out_dir):
     if math.floor(math.log(df.shape[0],2)) < rt:
         return
     print('segregating')
-    nf = [rt-1,1,6]
+    nf = [rt-1,1,5]
+    for i in range(rt):
+        sort_heap_level(df, i)
     broader_move(nf, csfv_file_path, out_dir)
+    for i in range(rt):
+        sort_heap_level(df, i, 'random' )
 
 if __name__ == '__main__':
     main()

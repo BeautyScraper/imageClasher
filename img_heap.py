@@ -1,6 +1,6 @@
 # Python3 implementation of Max Heap
 from logging import debug
-from random import randint
+from random import randint, shuffle
 import sys
 import pandas as pd
 from pathlib import Path
@@ -91,7 +91,34 @@ class MaxHeap:
 			if current == self.parent(current):
 				break
 			current = self.parent(current)
+		print(f'key_worth = {self.Heap[self.parent(current)].key_worth}')
+		self.Heap[self.parent(current)].key_worth += 1 
 
+	#write a function that sort the given heap level either by randomize and or by key_worth
+
+	def sort_heap_level(self, level, by_key_worth=True):
+		"""
+		Sorts a given level of the heap either by key_worth or randomly.
+		
+		:param level: The level of the heap to sort.
+		:param by_key_worth: If True, sorts by key_worth; otherwise sorts randomly.
+		"""
+		start_index = 2 ** level - 1
+		end_index = min(2 ** (level + 1) - 1, self.size)
+
+		# Extract the elements at the given level
+		level_elements = self.Heap[start_index:end_index + 1]
+
+		if by_key_worth:
+			# Sort the elements by key_worth
+			level_elements.sort(key=lambda candidate: candidate.key_worth, reverse=True)
+		else:
+			# Randomize the elements
+			shuffle(level_elements)
+
+		# Put the sorted elements back into the heap
+		for i, element in enumerate(level_elements, start=start_index):
+			self.Heap[i] = element
 
 	def parent(self, pos):
 		
