@@ -45,12 +45,14 @@ parser.set_defaults(rand=False)
 
 args = parser.parse_args()
 
+default_heaps_path = r'D:\paradise\stuff\essence\Pictures\Heaps'
+
 def run_clash(sdir):
     if type(sdir) == bool:
         print('wrong type')
         return 
     print(f'running the clash {sdir}')
-    heap_dir = Path(sdir).parent / f'heap_{Path(sdir).name}'
+    heap_dir = Path(default_heaps_path) / f'heap_{Path(sdir).name}'
     heap_dir.mkdir(exist_ok=True,parents=False)
     cmds = [] 
     cmds.append(f'python D:\Developed\Automation\imageClasher\heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)} --rand --time 30')
