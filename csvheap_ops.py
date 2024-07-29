@@ -1,3 +1,4 @@
+import glob
 import pandas as pd
 import shutil
 from pathlib import Path
@@ -80,10 +81,31 @@ def move_level(level, out_dir, csv_file):
     Path(csv_file).unlink()
     df.to_csv(csv_file,index=False)
 
+def only_leave_intersection(df, tdir : str, filname_column : str):
+    tdir = Path(tdir)
+    filesincsv = {Path(x).name  for _,x in enumerate(df[filname_column][1:])}
+    filesindir = {Path(x).name  for x in tdir.glob('*.jpg')}
+    extra_in_dir = filesindir - filesincsv
+    extra_file_dir : Path = tdir / 'extra'
+    extra_file_dir.mkdir(parents=True,exist_ok=True)
+    extra_row_in_csv : set[str] = filesincsv - filesindir
+    for efile in extra_row_in_csv:
+        filetocheck = str(tdir / efile)
+        # breakpoint()
+        df = df[df[filname_column] != filetocheck]
+        df = df[df[filname_column] != efile]
+    for efile in extra_in_dir:
+        efilpath : Path = tdir / efile
+        move_file(efilpath, extra_file_dir)
+    return df
+
 def main(out_dir):
     rt = 9
     csfv_file_path = str(Path(out_dir)/ 'clash_records.csv')
     df = pd.read_csv(csfv_file_path)
+    df = only_leave_intersection(df,out_dir,'filepath')
+    Path(csfv_file_path).unlink()
+    df.to_csv(csfv_file_path,index=False)
     print(f'count {df.shape[0]=}')
     if math.floor(math.log(df.shape[0],2)) < rt:
         return
@@ -95,6 +117,8 @@ def main(out_dir):
     for i in range(rt):
         sort_heap_level(df, i, 'random' )
 
+    
+
 if __name__ == '__main__':
-    main()
+    main(r'D:\paradise\stuff\essence\Pictures\Heaps\heap_SachMe')
     

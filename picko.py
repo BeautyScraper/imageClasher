@@ -53,7 +53,7 @@ def run_clash(sdir):
         return 
     print(f'running the clash {sdir}')
     heap_dir = Path(default_heaps_path) / f'heap_{Path(sdir).name}'
-    heap_dir.mkdir(exist_ok=True,parents=False)
+    heap_dir.mkdir(exist_ok=True,parents=True)
     cmds = [] 
     cmds.append(f'python D:\Developed\Automation\imageClasher\heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)} --rand --time 30')
     cmds.append(f'python D:\Developed\Automation\imageClasher\heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)}  --order rand --time 30')
@@ -113,6 +113,10 @@ class ClickableLabel(QtWidgets.QLabel):
             # import pdb;pdb.set_trace()
             if srcPath.is_file():
                 return srcPath
+            for extension in ['.png','.jpg','.jpeg','.gif','.bmp','.webp']:
+                if srcPath.with_suffix(extension).is_file():
+                    return srcPath.with_suffix(extension)
+
         return None
     def noteItDownre(self,fileName,repattern='',subpattern='',srclistFile=r'D:\Developed\Automation\fnr\TargetDirs.opml'):
         tk = self.Imagelist[self.currentIndex]

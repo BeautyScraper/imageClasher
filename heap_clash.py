@@ -164,6 +164,7 @@ class ClickableLabel(QtWidgets.QLabel):
 
 class HeapLabel(ClickableLabel):
     def setList(self, ra = 1):
+        Path(args.outputDir).mkdir(parents=True, exist_ok=True)
         self.im_heap_gen = MaxHeap(Path(args.outputDir)/'clash_records.csv')
 
         self.imgListGen = self.im_heap_gen.traverse_heap()
@@ -242,7 +243,7 @@ class Ui_MainWindow(object):
     path = args.inputDir
     def setupList(self):
         self.dffilename = Path(args.inputDir) / 'winningRecords.csv'
-        self.listI = [str(x) for x in Path(self.path).glob('*.jpg')]
+        self.listI = [str(x) for x in Path(self.path).glob('*.jpg')] + [str(x) for x in Path(self.path).glob('*.webp')]
         if args.rand:
             cyclePoint = random.randint(0, len(self.listI))
             self.listI = self.listI[cyclePoint::] + self.listI[:cyclePoint:]

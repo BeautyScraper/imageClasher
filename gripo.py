@@ -219,6 +219,12 @@ class Ui_MainWindow(object):
             self.listI = self.listI[cyclePoint::] + self.listI[:cyclePoint:]
         if args.order == 'rand':
             random.shuffle(self.listI)
+        elif args.order == 'date':
+            self.listI = sorted(self.listI, key=lambda x: Path(x).stat().st_mtime)
+            # start_time = time.time()
+            # end_time = start_time + args.time * 60
+            # while time.time() < end_time:
+            #     time.sleep(1)
             
         listOfName =  [Path(x).stem for x in self.listI]
         # weightM = np.zeros((len(listOfName),1))
