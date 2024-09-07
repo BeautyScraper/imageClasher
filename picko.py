@@ -46,6 +46,7 @@ parser.set_defaults(rand=False)
 args = parser.parse_args()
 
 default_heaps_path = r'D:\paradise\stuff\essence\Pictures\Heaps'
+default_string_path = r'D:\Developed\jobbers\ClashStrings'
 
 def run_clash(sdir):
     if type(sdir) == bool:
@@ -54,9 +55,11 @@ def run_clash(sdir):
     print(f'running the clash {sdir}')
     heap_dir = Path(default_heaps_path) / f'heap_{Path(sdir).name}'
     heap_dir.mkdir(exist_ok=True,parents=True)
+    clash_string_dir = Path(default_string_path) / f'heap_{Path(sdir).name}'
+    clash_string_dir.mkdir(exist_ok=True,parents=True)
     cmds = [] 
-    cmds.append(f'python D:\Developed\Automation\imageClasher\heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)} --rand --time 30')
-    cmds.append(f'python D:\Developed\Automation\imageClasher\heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)}  --order rand --time 30')
+    cmds.append(f'python D:\Developed\Automation\imageClasher\heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)} --stringDir {str(clash_string_dir)} --rand --time 30')
+    cmds.append(f'python D:\Developed\Automation\imageClasher\heap_clash.py --inputDir {sdir}  --outputDir {str(heap_dir)} --stringDir {str(clash_string_dir)}  --order rand --time 30')
     template_cmd = random.choice(cmds)
     print(template_cmd)
     os.system(template_cmd)

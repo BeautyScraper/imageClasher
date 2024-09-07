@@ -32,6 +32,8 @@ def dir_path(string):
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--inputDir', type=dir_path)
+# set a new parameter stringFiles with default value same as inputDir 
+parser.add_argument('--stringDir', type=dir_path, default=None)
 # parser.add_argument('--championsDir', type=dir_path)
 parser.add_argument('--outputDir', type=dir_path)
 parser.add_argument('--DeletablePath', type=dir_path,default=r'C:\temp\deleatble')
@@ -164,6 +166,8 @@ class ClickableLabel(QtWidgets.QLabel):
 
 class HeapLabel(ClickableLabel):
     def setList(self, ra = 1):
+        if args.stringDir is None:
+            args.stringDir = args.inputDir
         Path(args.outputDir).mkdir(parents=True, exist_ok=True)
         self.im_heap_gen = MaxHeap(Path(args.outputDir)/'clash_records.csv')
 
@@ -459,8 +463,9 @@ class Ui_MainWindow(object):
             self.timer.start(200 * len(moveStr))
         
     def AssignRole(self):
-        
-        moveStr = main(str(Path(args.inputDir) / 'files'))
+        temp_path = Path(args.stringDir) / 'files'
+        temp_path.mkdir(exist_ok=True,parents=True)
+        moveStr = main(str(temp_path))
         # print(moveStr)
         self.textlabel.setText(moveStr)
     
