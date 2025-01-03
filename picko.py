@@ -63,6 +63,9 @@ def run_clash(sdir):
     template_cmd = random.choice(cmds)
     print(template_cmd)
     os.system(template_cmd)
+    #write the template_cmd in a bat file if the file does not exist
+    with open(f'heap_{Path(sdir).name}.bat','w') as f:
+        f.write(template_cmd)
 
 
 def openInBrowser(fileName):
@@ -406,14 +409,20 @@ class Ui_MainWindow(object):
 
         menubar = MainWindow.menuBar()
         menubar.setVisible(False)
-        file_menu = menubar.addMenu("&Options")
+        file_menu = menubar.addMenu("O&ptions")
         toggle_menu_bar_shortcut = QtWidgets.QShortcut(QtGui.QKeySequence("F11"), MainWindow)
-        toggle_menu_bar_shortcut.activated.connect(lambda : menubar.setVisible(not menubar.isVisible()))
-        for acts in self.actions:
-            new_action = QtWidgets.QAction("Run Clash of" + acts.targetDir.strip('\\').split('\\')[-1], MainWindow)
+        def toggle_menu_bar():
+            menubar.setVisible(not menubar.isVisible()) 
+            menubar.setFocus()
+        toggle_menu_bar_shortcut.activated.connect(toggle_menu_bar )
+        for i,acts in enumerate(self.actions):
+            new_action = QtWidgets.QAction("Clash of " + acts.targetDir.strip('\\').split('\\')[-1], MainWindow)
+            new_action.setShortcut(QtGui.QKeySequence("Ctrl+" + str(i)))
             file_menu.addAction(new_action)
+            MainWindow.addAction(new_action)
             rt = lambda _,x11=acts.targetDir: run_clash(x11)
             new_action.triggered.connect(rt)
+            new_action.setEnabled(True)
 
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.arraowEvent())
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.skipEvent(10))
