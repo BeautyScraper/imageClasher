@@ -381,9 +381,9 @@ class Ui_MainWindow(object):
                 self.cells.append(LeftImage)
                 i += 1
         r_keys_list = [
-                    QtCore.Qt.Key_Delete, 
-                    QtCore.Qt.Key_End,
-                    QtCore.Qt.Key_PageDown,
+                    QtCore.Qt.Key_4, 
+                    QtCore.Qt.Key_5,
+                    QtCore.Qt.Key_6,
                     ]
         for r_key,r_cell in zip(r_keys_list,self.cells[::int(len(self.cells)/len(r_keys_list))]):
             QtWidgets.QShortcut(QtGui.QKeySequence(r_key), r_cell, activated=lambda x=r_cell:x.noteItDown('r.txt','blue'))

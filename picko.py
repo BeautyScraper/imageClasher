@@ -424,8 +424,8 @@ class Ui_MainWindow(object):
             new_action.triggered.connect(rt)
             new_action.setEnabled(True)
 
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.arraowEvent())
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.skipEvent(10))
+        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_4), MainWindow, activated=lambda :self.arraowEvent())
+        # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_4), MainWindow, activated=lambda :self.skipEvent(10))
         # QtWidgets.QShortcut(QtGui.QKeySequence('Down'), MainWindow, activated=lambda :self.arraowEvent())
         for acts in self.actions:
             if acts.actiontype == 'move':
@@ -444,14 +444,14 @@ class Ui_MainWindow(object):
         # QtWidgets.QShortcut(QtGui.QKeySequence("Shift+Left"), MainWindow, activated=self.openTargetDir)
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_A), MainWindow, activated=self.afterMath)
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_M), MainWindow, activated= toggleFulScreen)
-        # QtGui.QKeySequence(QtCore.Qt.ALT + QtCore.Qt.Key_Left).toString()
+        # QtGui.QKeySequence(QtCore.Qt.ALT + QtCore.Qt.Key_4).toString()
         # breakpoint()
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_I), MainWindow, activated=lambda :self.openFileIrfanView(self.label.getCurrentcontenderName()))
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_I), MainWindow, activated=lambda :self.openSrcFileIrfanview(self.label.getCurrentcontenderName()))
 
         QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_T), MainWindow, activated=self.startTime)
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.openFileIrfanView(self.LeftImage.getCurrentcontenderName()))
-        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.SHIFT + QtCore.Qt.Key_Left), MainWindow, activated=lambda :self.label.bringPreviousContenderOut())
+        QtWidgets.QShortcut(QtGui.QKeySequence( QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.label.bringPreviousContenderOut())
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.SHIFT + QtCore.Qt.Key_Right), MainWindow, activated=lambda :self.LeftImage.bringPreviousContenderOut())
         
         # QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_1), MainWindow, activated=lambda :self.label.noteItDown('dnbh.txt'))
@@ -520,7 +520,7 @@ class Ui_MainWindow(object):
         shuffle(wrestler)
         moveStr = '%s %sed %s' % (wrestler[0],random.choice(fc).strip(),wrestler[1])
         i = 1
-        while random.randint(0,5) > 2:
+        while False and random.randint(0,5) > 2 :
             moveStr += ' but %s countered with %s' % (wrestler[i%2],random.choice(fc).strip())
             i += 1
         print(moveStr)
@@ -587,6 +587,7 @@ class Ui_MainWindow(object):
            # Winner.setStyleSheet("border: 5px solid black;")
            # Winner.noteItDown('champions.txt') 
         # for _ in range(count):
+        print("arraowEvent")
         self.label.noteItDown(self.defaultaction.notedownfile) 
         self.label.bringNextContenderOut()
         self.statusbar.showMessage(self.label.getCurrentcontenderName())

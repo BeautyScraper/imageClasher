@@ -472,7 +472,7 @@ class Ui_MainWindow(object):
         self.textlabel.setText(moveStr)
     
     def statusbarManipulation(self):
-        rng = 3 > random.randint(0,15)
+        rng = 2 > random.randint(0,15)
         if rng:
             self.DoMoves()
         else:
