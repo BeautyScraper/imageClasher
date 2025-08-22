@@ -371,6 +371,7 @@ class Ui_MainWindow(object):
                 if (r+1) * (c+1) >= self.picInWin:
                     break
                 LeftImage = ClickableLabel(self.horizontalLayoutWidget)
+                LeftImage.setToolTip("Hovering over image")
                 # LeftImage.resize(self.cellwidth,self.cellheight)
                 LeftImage.resize(self.cellwidth,self.cellheight)
                 LeftImage.setList(self.listI[i::self.picInWin-1])

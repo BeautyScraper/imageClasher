@@ -15,9 +15,9 @@ clashFilep = r'D:\Developed\Automation\imageClasher\picko.py'
 cpd = r'C:\Heaven\YummyBaked\champions'
 mpd = r'C:\Heaven\YummyBaked\midCard'
 # breakpoint()
-sp = [dp for dp in Path(ipath).glob('*/')]
+sp = [dp for dp in Path(ipath).glob('*/') if dp.is_dir()]
 random.shuffle(sp)
-dp = sp[0]
+dp = random.choice(sp)
 cmd = 'python "%s" --inputDir "%s" ' % (clashFilep, str(dp))
 print(cmd)
 os.system(cmd)
